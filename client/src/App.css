@@ -1,0 +1,171 @@
+.formpage {
+  /* Intrucciones para el formulario*/
+  /*Se organizan los div*/
+}
+.formpage body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+.formpage .header {
+  color: cornflowerblue;
+  padding: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Open sans";
+}
+.formpage .container-header {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 60px;
+  margin-left: -80px;
+  margin-top: -10px;
+}
+.formpage .App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 50px auto;
+  background-color: #f0e8e6;
+  width: 700px;
+}
+.formpage h1 {
+  margin-left: 20%;
+  margin-top: 100px;
+  font-weight: 600;
+  font-size: 30px;
+  font-style: inherit;
+}
+.formpage h2 {
+  width: 82%;
+  margin-left: 8.5%;
+  color: black;
+}
+.formpage h3 {
+  font-size: 23px;
+  width: 100%;
+  margin-left: 8.5%;
+  color: black;
+}
+.formpage .form-groups {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  align-items: center;
+  color: #bab7b6;
+  font-size: 19px;
+}
+.formpage .form-groups input {
+  margin-left: -280px;
+}
+.formpage .form-groups button {
+  width: 140px;
+  height: 30px;
+  font-size: 20px;
+  padding-left: 10px;
+  border-radius: 5px;
+  margin: 5px;
+  background-color: #3573cb;
+  color: #fff;
+}
+.formpage input[type=text] {
+  margin: 15px 0;
+  font-size: 20px;
+  padding: 10px;
+  width: 70%;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-left: 8.5%;
+}
+.formpage input[type=number] {
+  margin: 15px 0;
+  font-size: 20px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  width: 70%;
+  margin-left: 8.5%;
+}
+.formpage b {
+  font-size: 19px;
+  color: black;
+  margin: 10px;
+  font-weight: 300;
+}
+.formpage p {
+  font-size: 23px;
+  margin-top: 20px;
+  width: 82%;
+  color: black;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: bold;
+}
+.formpage input[type=radio] {
+  margin-bottom: 15px;
+  font-family: "Roboto";
+  font-weight: 700;
+  transform: scale(1.5);
+}
+.formpage input[type=checkbox] {
+  margin-bottom: 15px;
+  font-family: "Roboto";
+  font-weight: 700;
+  transform: scale(1.5);
+}
+.formpage button {
+  width: 20%;
+  height: 30px;
+  margin-left: 40%;
+  margin-bottom: 30px;
+  background-color: transparent;
+  border: 2px solid;
+  font-size: 19px;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  color: black;
+}
+.formpage button:hover {
+  background-color: #6cbd4c;
+}
+
+.Loginpage * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+.Loginpage body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: red;
+}
+.Loginpage .wrapper {
+  width: 420;
+  background: black;
+  color: #fff;
+}
+.Loginpage .wrapper h1 {
+  font-size: 36px;
+  text-align: center;
+}
+.Loginpage .wrapper .input-box {
+  width: 100%;
+  height: 50px;
+  margin: 30px 0;
+}
+.Loginpage .input-box input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}/*# sourceMappingURL=App.css.map */
