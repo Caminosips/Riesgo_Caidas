@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import axios from 'axios';  // Importamos Axios para hacer peticiones HTTP
-import '../../App.css';
-import './Form.css';
+import React, { useState } from "react";
+import axios from "axios"; // Importamos Axios para hacer peticiones HTTP
+import "../../App.css";
+import "./Form.css";
 
 const App = () => {
   // Definimos estados para cada campo del formulario
-  const [nombre, setNombre] = useState('');
-  const [num_id, setNum_id] = useState('');
-  const [sexo, setSexo] = useState('');
-  const [caidas, setCaidas] = useState('');
+  const [nombre, setNombre] = useState("");
+  const [num_id, setNum_id] = useState("");
+  const [sexo, setSexo] = useState("");
+  const [caidas, setCaidas] = useState("");
   const [medicamentos, setMedicamentos] = useState([]);
   const [deficit, setDeficit] = useState([]);
-  const [estado, setEstado] = useState('');
-  const [deambulacion, setDeambulacion] = useState('');
-  const [edad, setEdad] = useState('');
+  const [estado, setEstado] = useState("");
+  const [deambulacion, setDeambulacion] = useState("");
+  const [edad, setEdad] = useState("");
 
   // Función para manejar cambios en los checkboxes de medicamentos
   const handleCheckboxChange = (event) => {
@@ -23,7 +23,7 @@ const App = () => {
         setMedicamentos([...medicamentos, id]);
       }
     } else {
-      setMedicamentos(medicamentos.filter(item => item !== id));
+      setMedicamentos(medicamentos.filter((item) => item !== id));
     }
   };
 
@@ -35,7 +35,7 @@ const App = () => {
         setDeficit([...deficit, id]);
       }
     } else {
-      setDeficit(deficit.filter(item => item !== id));
+      setDeficit(deficit.filter((item) => item !== id));
     }
   };
 
@@ -50,29 +50,32 @@ const App = () => {
       deficit,
       estado,
       deambulacion,
-      edad
+      edad,
     };
 
     try {
       // Enviar los datos mediante una solicitud POST usando Axios
-      const response = await axios.post('http://localhost:5000/api/datos', formData);
+      const response = await axios.post(
+        "http://localhost:5000/api/datos",
+        formData
+      );
 
-      console.log('Datos enviados exitosamente:', response.data);
+      console.log("Datos enviados exitosamente:", response.data);
     } catch (error) {
-      console.error('Error al enviar los datos:', error.message);
+      console.error("Error al enviar los datos:", error.message);
     }
   };
 
   return (
-    
-    <div className='formpage flex'>
+    <div className="formpage flex">
       <div className="App">
         <header className="header">
           <div className="container-header">
-            <h1>Escala de valoracion de ruesgo de caída <br /> (J.H. Downton)</h1>
+            <h1>
+              Escala de valoracion de ruesgo de caída <br /> (J.H. Downton)
+            </h1>
           </div>
         </header>
-
         <label>
           <h2>1. Nombre y apellidos</h2>
         </label>
@@ -85,7 +88,6 @@ const App = () => {
           placeholder="Nombre y apellidos"
         />
         <br />
-
         <label>
           <h3>2. Número de documento de identificación</h3>
         </label>
@@ -98,53 +100,99 @@ const App = () => {
           }}
         />
         <br />
-
         <div className="form-groups">
           <p>3. Sexo</p>
           <label>
-            <input type="radio" name="sexo" value="Femenino" onChange={(event) => setSexo(event.target.value)} />
+            <input
+              type="radio"
+              name="sexo"
+              value="Femenino"
+              onChange={(event) => setSexo(event.target.value)}
+            />
             <b>Femenino</b>
           </label>
           <label>
-            <input type="radio" name="sexo" value="Masculino" onChange={(event) => setSexo(event.target.value)} />
+            <input
+              type="radio"
+              name="sexo"
+              value="Masculino"
+              onChange={(event) => setSexo(event.target.value)}
+            />
             <b>Masculino</b>
           </label>
           <label>
-            <input type="radio" name="sexo" value="Indefinido" onChange={(event) => setSexo(event.target.value)} />
+            <input
+              type="radio"
+              name="sexo"
+              value="Indefinido"
+              onChange={(event) => setSexo(event.target.value)}
+            />
             <b>Indefinido</b>
           </label>
         </div>
         <br />
-
         <div className="form-groups">
           <p>4. ¿Ha presentado Caídas en los últimos 3 meses?</p>
           <label>
-            <input type="radio" name="caidas" value="No" onChange={(event) => setCaidas(event.target.value)} />
+            <input
+              type="radio"
+              name="caidas"
+              value="No"
+              onChange={(event) => setCaidas(event.target.value)}
+            />
             <b>No</b>
           </label>
           <label>
-            <input type="radio" name="caidas" value="Si" onChange={(event) => setCaidas(event.target.value)} />
+            <input
+              type="radio"
+              name="caidas"
+              value="Si"
+              onChange={(event) => setCaidas(event.target.value)}
+            />
             <b>Sí</b>
           </label>
         </div>
         <br />
-
         <div className="form-groups">
           <p>5. ¿Qué medicamentos toma?</p>
           <label>
-            <input type="checkbox" name="medicamentos" id="Ninguno" onChange={handleCheckboxChange} />
+            <input
+              type="checkbox"
+              name="medicamentos"
+              id="Ninguno"
+              value="Ninguno"
+              onChange={handleCheckboxChange}
+            />
             <b>Ninguno</b>
           </label>
           <label>
-            <input type="checkbox" name="medicamentos" id="Tranquilizantes/Sedantes" onChange={handleCheckboxChange} />
+            <input
+              type="checkbox"
+              name="medicamentos"
+              id="Tranquilizantes/Sedantes"
+              value="Tranquilizantes/Sedantes"
+              onChange={handleCheckboxChange}
+            />
             <b>Tranquilizantes/Sedantes</b>
           </label>
           <label>
-            <input type="checkbox" name="medicamentos" id="Diuréticos" onChange={handleCheckboxChange} />
+            <input
+              type="checkbox"
+              name="medicamentos"
+              id="Diuréticos"
+              value="Diureticos"
+              onChange={handleCheckboxChange}
+            />
             <b>Diuréticos</b>
           </label>
           <label>
-            <input type="checkbox" name="medicamentos" id="Hipotensores" onChange={handleCheckboxChange} />
+            <input
+              type="checkbox"
+              name="medicamentos"
+              id="Hipotensores"
+              value="Hipotensores"
+              onChange={handleCheckboxChange}
+            />
             <b>Hipotensores</b>
           </label>
           <label>
@@ -152,19 +200,25 @@ const App = () => {
               type="checkbox"
               name="medicamentos"
               id="Antiparkinsonianos"
+              value="Antiparkinsoninos"
               onChange={handleCheckboxChange}
             />
             <b>Antiparkinsonianos</b>
           </label>
           <label>
-            <input type="checkbox" name="medicamentos" id="Antidepresivos" onChange={handleCheckboxChange}/>
+            <input
+              type="checkbox"
+              name="medicamentos"
+              id="Antidepresivos"
+              onChange={handleCheckboxChange}
+            />
             <b>Antidepresivos</b>
           </label>
           <label>
             <input
               type="checkbox"
               name="medicamentos"
-              id="Otros medicamentos" 
+              id="Otros medicamentos"
               onChange={handleCheckboxChange}
             />
             <b>Otros medicamentos</b>
@@ -173,15 +227,24 @@ const App = () => {
           {/* Otros checkboxes */}
         </div>
         <br />
-
         <div className="form-groups">
           <p>6. ¿Tiene algún déficit temporal?</p>
           <label>
-            <input type="checkbox" name="deficit" id="ninguno" onChange={handleDeficitChange} />
+            <input
+              type="checkbox"
+              name="deficit"
+              id="ninguno"
+              onChange={handleDeficitChange}
+            />
             <b>Ninguno</b>
           </label>
           <label>
-            <input type="checkbox" name="deficit" id="alteraciones_visuales" onChange={handleDeficitChange} />
+            <input
+              type="checkbox"
+              name="deficit"
+              id="alteraciones_visuales"
+              onChange={handleDeficitChange}
+            />
             <b>Alteraciones Visuales</b>
           </label>
           <label>
@@ -189,75 +252,102 @@ const App = () => {
               type="checkbox"
               name="deficit"
               id="alteraciones_audiovisuales"
+              onChange={handleCheckboxChange}
             />
             <b>Alteraciones Audiovisuales</b>
           </label>
           <label>
-            <input type="checkbox" name="deficit" id="Extremidades" />
+            <input
+              type="checkbox"
+              name="deficit"
+              id="Extremidades"
+              onChange={handleCheckboxChange}
+            />
+
             <b>Extremidades</b>
           </label>
         </div>
-
         <div className="form-groups">
           <p>7. ¿Cuál es su estado mental?</p>
           <label>
-            <input type="radio" name="estado" />
+            <input type="radio" name="estado" onChange={handleCheckboxChange} />
+
             <b>Orientado</b>
           </label>
           <label>
-            <input type="radio" name="estado" />
+            <input type="radio" name="estado" onChange={handleCheckboxChange} />
             <b>Confuso</b>
           </label>
         </div>
-
         <div className="form-groups">
           <p>8. Deambulación</p>
           <label>
-            <input type="radio" name="deambulacion" />
+            <input
+              type="radio"
+              name="deambulacion"
+              onChange={handleCheckboxChange}
+            />
             <b>Normal</b>
           </label>
           <label>
-            <input type="radio" name="deambulacion" />
+            <input
+              type="radio"
+              name="deambulacion"
+              onChange={handleCheckboxChange}
+            />
             <b>Segura con ayuda</b>
           </label>
           <label>
-            <input type="radio" name="deambulacion" />
+            <input
+              type="radio"
+              name="deambulacion"
+              onChange={handleCheckboxChange}
+            />
             <b> Insegura con ayuda/ Sin ayuda</b>
           </label>
           <label>
-            <input type="radio" name="deambulacion" />
+            <input
+              type="radio"
+              name="deambulacion"
+              onChange={handleCheckboxChange}
+            />
             <b>Imposible</b>
           </label>
           {/* Otros checkboxes */}
         </div>
         <br />
-
-
-
         <div className="form-groups">
           <p>9. Edad</p>
           <label>
-            <input type="radio" name="edad" value="Menor de 70" onChange={(event) => setEdad(event.target.value)} />
+            <input
+              type="radio"
+              name="edad"
+              value="Menor de 70"
+              onChange={(event) => setEdad(event.target.value)}
+            />
             <b>Menor de 70</b>
           </label>
           <label>
-            <input type="radio" name="edad" />
+            <input
+              type="radio"
+              name="edad"
+              onChange={(event) => setEdad(event.target.value)}
+            />
             <b>Mayor de 70</b>
           </label>
           {/* Otros radios */}
         </div>
         <br />
-
-        <button className="btn_1" onClick={add}>Listo</button>  {/* Botón para enviar el formulario */}
+        <button className="btn_1" onClick={add}>
+          Listo
+        </button>{" "}
+        {/* Botón para enviar el formulario */}
       </div>
     </div>
-    
-  )
-}
+  );
+};
 
 export default App;
-
-
 
 /*
 import React, { useState }from 'react'

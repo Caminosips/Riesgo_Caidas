@@ -12,8 +12,10 @@ dist
 dist-ssr
 *.local
 
-#node modulesc
-/node_modules
+
+
+
+
 
 # Editor directories and files
 .vscode/*

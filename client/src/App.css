@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Playwrite+CU:wght@100..400&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 .formpage {
   /* Intrucciones para el formulario*/
   /*Se organizan los div*/
@@ -33,6 +34,7 @@
   margin: 50px auto;
   background-color: #f0e8e6;
   width: 700px;
+  border-radius: 20px;
 }
 .formpage h1 {
   margin-left: 20%;
@@ -128,44 +130,92 @@
   border: 2px solid;
   font-size: 19px;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-  color: black;
+  color: cornflowerblue;
+  transition: 0.3 ease;
+  background: white;
+  border-radius: 10px;
 }
 .formpage button:hover {
-  background-color: #6cbd4c;
+  background: cornflowerblue;
+  color: white;
 }
 
-.Loginpage * {
+.loginpage {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
-}
-.Loginpage body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothin: grayscale;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: red;
+  background: linear-gradient(to bottom right, cornflowerblue, #665969);
+  background-size: cover;
+  background-position: center;
 }
-.Loginpage .wrapper {
-  width: 420;
-  background: black;
+.loginpage .Login {
+  width: 400px;
+  height: 400px;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(30px);
+          backdrop-filter: blur(30px);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   color: #fff;
+  border-radius: 10px;
+  padding: 30px 40px;
 }
-.Loginpage .wrapper h1 {
-  font-size: 36px;
+.loginpage .Login h1 {
+  font-size: 40px;
   text-align: center;
+  margin-top: 50px;
 }
-.Loginpage .wrapper .input-box {
+.loginpage .Login .input-box {
+  position: relative;
   width: 100%;
   height: 50px;
-  margin: 30px 0;
+  margin: 40px 0;
+  padding: 1px;
 }
-.Loginpage .input-box input {
+.loginpage .input-box input {
   width: 100%;
   height: 100%;
   background: transparent;
   border: none;
   outline: none;
   border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 40px;
+  font-size: 16px;
+  color: #fff;
+}
+.loginpage .input-box input::-moz-placeholder {
+  color: #fff;
+  padding: 10px;
+}
+.loginpage .input-box input::placeholder {
+  color: #fff;
+  padding: 10px;
+}
+.loginpage .input-box .icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+}
+.loginpage .Login button {
+  width: 70%;
+  margin-left: 15%;
+  height: 45px;
+  background: #fff;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: 700;
 }/*# sourceMappingURL=App.css.map */
