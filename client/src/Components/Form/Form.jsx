@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import axios from "axios"; // Importamos Axios para hacer peticiones HTTP
 import "../../App.css";
 import "./Form.css";
@@ -17,25 +17,25 @@ const App = () => {
 
   // Función para manejar cambios en los checkboxes de medicamentos
   const handleCheckboxChange = (event) => {
-    const { id, checked } = event.target;
+    const { value, checked } = event.target;
     if (checked) {
-      if (!medicamentos.includes(id)) {
-        setMedicamentos([...medicamentos, id]);
+      if (!medicamentos.includes(value)) {
+        setMedicamentos([...medicamentos,value]);
       }
     } else {
-      setMedicamentos(medicamentos.filter((item) => item !== id));
+      setMedicamentos(medicamentos.filter((item) => item !== value));
     }
   };
 
   // Función para manejar cambios en los checkboxes de déficit temporal
   const handleDeficitChange = (event) => {
-    const { id, checked } = event.target;
+    const { value, checked } = event.target;
     if (checked) {
-      if (!deficit.includes(id)) {
-        setDeficit([...deficit, id]);
+      if (!deficit.includes(value)) {
+        setDeficit([...deficit, value]);
       }
     } else {
-      setDeficit(deficit.filter((item) => item !== id));
+      setDeficit(deficit.filter((item) => item !== value));
     }
   };
 
@@ -86,6 +86,7 @@ const App = () => {
           type="text"
           name="name"
           placeholder="Nombre y apellidos"
+          required
         />
         <br />
         <label>
@@ -97,6 +98,7 @@ const App = () => {
           placeholder="Número de identificación"
           onChange={(event) => {
             setNum_id(event.target.value);
+            required
           }}
         />
         <br />
@@ -179,7 +181,7 @@ const App = () => {
             <input
               type="checkbox"
               name="medicamentos"
-              id="Diuréticos"
+              id="Diureticos"
               value="Diureticos"
               onChange={handleCheckboxChange}
             />
@@ -210,6 +212,7 @@ const App = () => {
               type="checkbox"
               name="medicamentos"
               id="Antidepresivos"
+              value="Antidepresivos"
               onChange={handleCheckboxChange}
             />
             <b>Antidepresivos</b>
@@ -219,6 +222,7 @@ const App = () => {
               type="checkbox"
               name="medicamentos"
               id="Otros medicamentos"
+              value="Otros medicamentos"
               onChange={handleCheckboxChange}
             />
             <b>Otros medicamentos</b>
@@ -233,7 +237,8 @@ const App = () => {
             <input
               type="checkbox"
               name="deficit"
-              id="ninguno"
+              id="Ninguno"
+              value="Ninguno"
               onChange={handleDeficitChange}
             />
             <b>Ninguno</b>
@@ -242,7 +247,8 @@ const App = () => {
             <input
               type="checkbox"
               name="deficit"
-              id="alteraciones_visuales"
+              id="Alteraciones_visuales"
+              value="Alteraciones_visuales"
               onChange={handleDeficitChange}
             />
             <b>Alteraciones Visuales</b>
@@ -252,7 +258,8 @@ const App = () => {
               type="checkbox"
               name="deficit"
               id="alteraciones_audiovisuales"
-              onChange={handleCheckboxChange}
+              value="alteraciones_audiovisuales"
+              onChange={handleDeficitChange}
             />
             <b>Alteraciones Audiovisuales</b>
           </label>
@@ -261,7 +268,8 @@ const App = () => {
               type="checkbox"
               name="deficit"
               id="Extremidades"
-              onChange={handleCheckboxChange}
+              value="Extremidades"
+              onChange={handleDeficitChange}
             />
 
             <b>Extremidades</b>
@@ -270,12 +278,18 @@ const App = () => {
         <div className="form-groups">
           <p>7. ¿Cuál es su estado mental?</p>
           <label>
-            <input type="radio" name="estado" onChange={handleCheckboxChange} />
+            <input type="radio" 
+            name="estado" 
+            value="Orientado"
+            onChange={(event) => setEstado(event.target.value)} />
 
             <b>Orientado</b>
           </label>
           <label>
-            <input type="radio" name="estado" onChange={handleCheckboxChange} />
+            <input type="radio" 
+            name="estado"
+            value="Confuso"
+            onChange={(event) => setEstado(event.target.value)} />
             <b>Confuso</b>
           </label>
         </div>
@@ -285,7 +299,8 @@ const App = () => {
             <input
               type="radio"
               name="deambulacion"
-              onChange={handleCheckboxChange}
+              value="Normal"
+              onChange={(event) => setDeambulacion(event.target.value)}
             />
             <b>Normal</b>
           </label>
@@ -293,7 +308,8 @@ const App = () => {
             <input
               type="radio"
               name="deambulacion"
-              onChange={handleCheckboxChange}
+              value="Segura con ayuda"
+              onChange={(event) => setDeambulacion(event.target.value)}
             />
             <b>Segura con ayuda</b>
           </label>
@@ -301,7 +317,8 @@ const App = () => {
             <input
               type="radio"
               name="deambulacion"
-              onChange={handleCheckboxChange}
+              value="Insegura con ayuda/ Sin ayuda"
+              onChange={(event) => setDeambulacion(event.target.value)}
             />
             <b> Insegura con ayuda/ Sin ayuda</b>
           </label>
@@ -309,7 +326,9 @@ const App = () => {
             <input
               type="radio"
               name="deambulacion"
-              onChange={handleCheckboxChange}
+              value="Imposible"
+              onChange={(event) => setDeambulacion(event.target.value)}
+
             />
             <b>Imposible</b>
           </label>
@@ -331,6 +350,7 @@ const App = () => {
             <input
               type="radio"
               name="edad"
+              value="Mayor de 70"
               onChange={(event) => setEdad(event.target.value)}
             />
             <b>Mayor de 70</b>

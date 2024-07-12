@@ -51,6 +51,31 @@ app.listen(PORT, () => {
 });
 
 
+//crea otra ruta
+app.post('/login' , (req, res)=> {
+  // obtener variables enviadas desde el formulario
+
+  const sentLoginEmail = req.body.LoginEmail
+  const sentLoginPassword = req.body.LoginPassword
+
+  //crear una declaración Sql para insertar el usuario en la tabla de la base de datos Usuarios
+  const SQL = 'SELECT * FROM users WHERE email = ? && password = ?'
+  // VAMOS A INGRESAR ESTOS VALORES MEDIANTE UNA VARIABLE
+  const Values = [sentLoginEmail, sentLoginPassword]
+
+  db.query( SQL, Values, (err, results)=>{
+      if(err){
+          res.send({error: err})
+      }
+      if(results.length > 0){
+          res.send(results)
+      }
+      else{
+          res.send({message: 'Credentials Dont match!'})
+          
+      }
+  })
+})
 /*
 //nuestras dependencias
 const express = require('express')

@@ -5,6 +5,8 @@ import { FaUser, FaLock } from "react-icons/fa6";
 
 
 
+
+
 const Login = () => {
   return (
   <div className="loginpage flex">
@@ -15,13 +17,15 @@ const Login = () => {
                 <input type="text" placeholder="Nombre de usuario" required />
                 <FaUser className="icon" />
             </div>
+
+            
             <div className="input-box">
                 <input type="password" placeholder="Contraseña" required />
                 <FaLock className="icon" />
             </div>
 
-
-            <button type="submit">Login</button>
+          <button type="submit">Login</button>
+          
 
         </form>
         </div>
