@@ -159,7 +159,7 @@
     background: white;
     border-radius: 10px;
   }
-
+  
   button:hover {
     background: cornflowerblue;
     color: white;
@@ -177,6 +177,7 @@
 //Empieza la pagina de login
 .loginpage{
 
+    
     margin: -20px;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
@@ -189,6 +190,8 @@
     background: linear-gradient(to bottom right,cornflowerblue ,#665969);
     background-size: cover;
     background-position: center;
+    overflow: hidden;
+    overflow: auto;
   
 
   .Login{

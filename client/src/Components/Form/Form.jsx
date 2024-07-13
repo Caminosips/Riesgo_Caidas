@@ -2,6 +2,7 @@ import  { useState } from "react";
 import axios from "axios"; // Importamos Axios para hacer peticiones HTTP
 import "../../App.css";
 import "./Form.css";
+import  Swal  from "sweetalert2";
 
 const App = () => {
   // Definimos estados para cada campo del formulario
@@ -14,6 +15,21 @@ const App = () => {
   const [estado, setEstado] = useState("");
   const [deambulacion, setDeambulacion] = useState("");
   const [edad, setEdad] = useState("");
+
+
+  
+  //Función para reiniciar el formulario
+  /*const onSubmit = ()=> {
+    setNombre('')
+    setNum_id('')
+    setSexo('')
+    setCaidas('')
+    setMedicamentos('')
+    setDeficit('')
+    setEstado('')
+    setDeambulacion('')
+    setEdad('')
+  }*/
 
   // Función para manejar cambios en los checkboxes de medicamentos
   const handleCheckboxChange = (event) => {
@@ -51,6 +67,8 @@ const App = () => {
       estado,
       deambulacion,
       edad,
+
+      
     };
 
     try {
@@ -64,9 +82,21 @@ const App = () => {
     } catch (error) {
       console.error("Error al enviar los datos:", error.message);
     }
+
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Your work has been saved",
+      showConfirmButton: false,
+      timer: 1500
+    });
   };
 
+ 
+
   return (
+
+  
     <div className="formpage flex">
       <div className="App">
         <header className="header">
@@ -364,6 +394,7 @@ const App = () => {
         {/* Botón para enviar el formulario */}
       </div>
     </div>
+
   );
 };
 
@@ -593,6 +624,7 @@ const App = () => {
           <button onClick={add}>Listo</button>
         </div>
       </div>
+
     </>
   )
 }

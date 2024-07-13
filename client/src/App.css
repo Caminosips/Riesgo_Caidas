@@ -159,6 +159,8 @@
   background: linear-gradient(to bottom right, cornflowerblue, #665969);
   background-size: cover;
   background-position: center;
+  overflow: hidden;
+  overflow: auto;
 }
 .loginpage .Login {
   width: 400px;
