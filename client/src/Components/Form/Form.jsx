@@ -86,7 +86,7 @@ const App = () => {
           type="text"
           name="name"
           placeholder="Nombre y apellidos"
-          required
+        
         />
         <br />
         <label>
@@ -98,7 +98,7 @@ const App = () => {
           placeholder="Número de identificación"
           onChange={(event) => {
             setNum_id(event.target.value);
-            required
+        
           }}
         />
         <br />
@@ -247,8 +247,8 @@ const App = () => {
             <input
               type="checkbox"
               name="deficit"
-              id="Alteraciones_visuales"
-              value="Alteraciones_visuales"
+              id="Alteraciones Visuales"
+              value="Alteraciones Visuales"
               onChange={handleDeficitChange}
             />
             <b>Alteraciones Visuales</b>
@@ -257,8 +257,8 @@ const App = () => {
             <input
               type="checkbox"
               name="deficit"
-              id="alteraciones_audiovisuales"
-              value="alteraciones_audiovisuales"
+              id="Alteraciones Audiovisuales"
+              value="Alteraciones Audiovisuales"
               onChange={handleDeficitChange}
             />
             <b>Alteraciones Audiovisuales</b>
@@ -317,10 +317,10 @@ const App = () => {
             <input
               type="radio"
               name="deambulacion"
-              value="Insegura con ayuda/ Sin ayuda"
+              value="Insegura con ayuda / Sin ayuda"
               onChange={(event) => setDeambulacion(event.target.value)}
             />
-            <b> Insegura con ayuda/ Sin ayuda</b>
+            <b>Insegura con ayuda / Sin ayuda</b>
           </label>
           <label>
             <input

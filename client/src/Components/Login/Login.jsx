@@ -24,13 +24,14 @@ const Login = () => {
                 <FaLock className="icon" />
             </div>
 
-          <button type="submit">Login</button>
+          <button type="submit" >Login</button>
+         
           
 
         </form>
         </div>
     </div>
   );
-};
+}
 
 export default Login;

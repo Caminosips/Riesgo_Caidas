@@ -147,8 +147,7 @@
 }
 
 .loginpage {
-  margin: 0;
-  padding: 0;
+  margin: -20px;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -194,8 +193,7 @@
   border-radius: 40px;
   font-size: 16px;
   color: #fff;
-  text-align: left;
-  padding-left: 20px;
+  text-align: center;
 }
 .loginpage .input-box input::-moz-placeholder {
   color: #fff;
