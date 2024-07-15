@@ -2,6 +2,8 @@ const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 
@@ -54,84 +56,42 @@ app.listen(PORT, () => {
   console.log(`Servidor backend está corriendo en http://localhost:${PORT}`);
 });
 
-/*
-//crea otra ruta
-app.post('/login' , (req, res)=> {
-  // obtener variables enviadas desde el formulario
+// Nueva ruta para el login sin hashear
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
+  
+  const query = 'SELECT * FROM users WHERE username = ? AND password = ?';
+  db.query(query, [username, password], (error, results) => {
+    if (error) {
+      res.status(500).json({ success: false, message: 'Error del servidor' });
+      return;
+    }
+    
+    if (results.length > 0) {
+      const token = jwt.sign(
+        { userId: results[0].id, username: results[0].username },
+        'tu_secreto_jwt',  // Reemplaza esto con un secreto seguro
+        { expiresIn: '1h' }
+      );
+      res.json({ success: true, token, username: results[0].username });
+    } else {
+      res.json({ success: false, message: 'Credenciales incorrectas' });
+    }
+  });
+});
 
-  const sentLoginEmail = req.body.LoginEmail
-  const sentLoginPassword = req.body.LoginPassword
+// Función de middleware para verificar el token JWT (sin cambios)
+const verifyToken = (req, res, next) => {
+  // ... (código existente sin cambios)
+};
 
-  //crear una declaración Sql para insertar el usuario en la tabla de la base de datos Usuarios
-  const SQL = 'SELECT * FROM users WHERE email = ? && password = ?'
-  // VAMOS A INGRESAR ESTOS VALORES MEDIANTE UNA VARIABLE
-  const Values = [sentLoginEmail, sentLoginPassword]
+// Ruta protegida de ejemplo (sin cambios)
+app.get('/api/protected', verifyToken, (req, res) => {
+  res.status(200).send('Esta es una ruta protegida');
+});
 
-  db.query( SQL, Values, (err, results)=>{
-      if(err){
-          res.send({error: err})
-      }
-      if(results.length > 0){
-          res.send(results)
-      }
-      else{
-          res.send({message: 'Credentials Dont match!'})
-          
-      }
-  })
-})
-/*
-//nuestras dependencias
-const express = require('express')
-const app = express()
-const mysql = require('mysql')
-const cors = require('cors')
-
-
-app.use(express.json())
-app.use(cors())
-
-//Ejecutar el servidor
-app.listen (3002, () => {
-    console.log('server is running on port 3002')
-})
-
-// Crear los datos basados(mysql)
-const db = mysql.createConnection({
-    user: 'root',
-    host: 'localhost',
-    password: ' ',
-    database: 'riesgodb',
-})
-
-// crear una ruta al servidor
-
-app.post ('/create' ,(req, res) => {
-    //Obtener variables enviadas desde el formulario
-    const sentNombre =req.body.Nombre
-    const sentNum_id =req.body.Num_id
-    const sentSexo =req.body.Sexo
-    const sentCaidas =req.body.Caidas
-    const sentMedicamento =req.body.Medicamento
-    const sentDeficit =req.body.Deficit
-    const sentEstado =req.body.Estado
-    const sentDeambulacion =req.body.Deambulacion
-    const sentEdad =req.body.Edad
-
-    //crear una declaracion sql para insertar los daros en la tabla
-    const SQL = 'INSERT INTO form(nombre, num_id, sexo, caidas, medicamentos, deficit, estado, deambulacion, edad) VALUES(?,?,?,?,?,?,?,?,?) '
-    //Ingresar los datos mediante una variable
-    const Values = [sentNombre, sentNum_id, sentSexo, sentCaidas, sentMedicamento, sentDeficit, sentEstado, sentDeambulacion, sentEdad]
-
-    //Consulta para ejecutar la intruccion sql
-    db.query( SQL, Values, (err, results)=>{
-        if(err){
-            res.send(err)
-        }
-        else{
-            console.log('User inserted successfully!')
-            res.send({message: 'User added!'})
-        }
-    })
-})
-*/
+// Puerto donde el servidor Express escuchará las solicitudes
+const PORT2 = 5000;
+app.listen(PORT2, () => {
+  console.log(`Servidor backend está corriendo en http://localhost:${PORT2}`);
+});
