@@ -30,6 +30,10 @@ db.connect((err) => {
 app.post('/api/datos', (req, res) => {
   const formData = req.body;  // Datos enviados desde el frontend
 
+
+  // Asegúrate de que los campos medicamentos y deficit sean strings
+  formData.medicamentos = formData.medicamentos || '';
+  formData.deficit = formData.deficit || '';
   // Insertar los datos en la base de datos
   const sql = 'INSERT INTO datos_formulario SET ?';
 
@@ -50,7 +54,7 @@ app.listen(PORT, () => {
   console.log(`Servidor backend está corriendo en http://localhost:${PORT}`);
 });
 
-
+/*
 //crea otra ruta
 app.post('/login' , (req, res)=> {
   // obtener variables enviadas desde el formulario

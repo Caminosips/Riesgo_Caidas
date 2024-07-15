@@ -207,10 +207,10 @@
 }
 .loginpage .input-box .icon {
   position: absolute;
-  right: 20px;
-  top: 50%;
+  right: 15px;
+  top: 55%;
   transform: translateY(-50%);
-  font-size: 16px;
+  font-size: 21px;
 }
 .loginpage .Login button {
   width: 70%;

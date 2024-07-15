@@ -1,9 +1,10 @@
 import React from "react";
 import "./Login.css";
 import "../../App.css";
-import { FaUser, FaLock } from "react-icons/fa6";
+import { FaUser, FaEyeSlash   } from "react-icons/fa6";
+import { IoEye } from "react-icons/io5";
 import { useState } from "react";
-import { Link ,useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -13,6 +14,7 @@ const Login = ({setUser}) => {
     const [usuario,setUsuario] = useState("")
     const [contraseña,setContraseña] = useState("")
     const navigateTo = useNavigate()
+    
 
     
     const handleSubmit = (e) => {
@@ -27,6 +29,7 @@ const Login = ({setUser}) => {
 
     }
 
+    const [showPwd, setShowPwd] = useState(false)
   return (
     <div className="loginpage flex">
       <div className="Login">
@@ -44,13 +47,15 @@ const Login = ({setUser}) => {
           </div>
 
           <div className="input-box">
-            <input type="password" 
+            <input type={ showPwd ? "text" :  "password"} 
             placeholder="Contraseña"
             value={contraseña}
             onChange={e => setContraseña(e.target.value)}
             required
             />
-            <FaLock className="icon" />
+              <FaEyeSlash className="icon" onClick={() => setShowPwd(!showPwd)}>
+                {showPwd ?  IoEye :  FaEyeSlash }
+              </FaEyeSlash>
           </div>
 
 

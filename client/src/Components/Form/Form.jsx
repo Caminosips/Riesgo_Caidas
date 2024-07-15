@@ -18,18 +18,7 @@ const App = () => {
 
 
   
-  //Función para reiniciar el formulario
-  /*const onSubmit = ()=> {
-    setNombre('')
-    setNum_id('')
-    setSexo('')
-    setCaidas('')
-    setMedicamentos('')
-    setDeficit('')
-    setEstado('')
-    setDeambulacion('')
-    setEdad('')
-  }*/
+  
 
   // Función para manejar cambios en los checkboxes de medicamentos
   const handleCheckboxChange = (event) => {
@@ -55,6 +44,18 @@ const App = () => {
     }
   };
 
+  const resetForm = () => {
+    setNombre("");
+    setNum_id("");
+    setSexo("");
+    setCaidas("");
+    setMedicamentos([]);
+    setDeficit([]);
+    setEstado("");
+    setDeambulacion("");
+    setEdad("");
+  };
+
   // Función para enviar los datos al backend
   const add = async () => {
     const formData = {
@@ -62,8 +63,8 @@ const App = () => {
       num_id,
       sexo,
       caidas,
-      medicamentos,
-      deficit,
+      medicamentos: medicamentos.join(', '), // Convertir array a string
+      deficit: deficit.join(', '), // Convertir array a string
       estado,
       deambulacion,
       edad,
@@ -79,20 +80,31 @@ const App = () => {
       );
 
       console.log("Datos enviados exitosamente:", response.data);
+      await Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Your work has been saved",
+        showConfirmButton: false,
+        timer: 1500
+      });
+
+      resetForm();
     } catch (error) {
       console.error("Error al enviar los datos:", error.message);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error al enviar los datos",
+        text: "Por favor, intente nuevamente",
+        showConfirmButton: true
+      });
+    
     }
 
-    Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Your work has been saved",
-      showConfirmButton: false,
-      timer: 1500
-    });
+    
   };
 
- 
+
 
   return (
 
@@ -110,6 +122,7 @@ const App = () => {
           <h2>1. Nombre y apellidos</h2>
         </label>
         <input
+          value={nombre}
           onChange={(event) => {
             setNombre(event.target.value);
           }}
@@ -123,13 +136,12 @@ const App = () => {
           <h3>2. Número de documento de identificación</h3>
         </label>
         <input
+          value={num_id}
           type="number"
           name="id"
           placeholder="Número de identificación"
-          onChange={(event) => {
-            setNum_id(event.target.value);
-        
-          }}
+          onChange={(event) => setNum_id(event.target.value)}
+          
         />
         <br />
         <div className="form-groups">
@@ -139,6 +151,7 @@ const App = () => {
               type="radio"
               name="sexo"
               value="Femenino"
+              checked={sexo === "Femenino"}
               onChange={(event) => setSexo(event.target.value)}
             />
             <b>Femenino</b>
@@ -148,6 +161,7 @@ const App = () => {
               type="radio"
               name="sexo"
               value="Masculino"
+              checked={sexo === "Masculino"}
               onChange={(event) => setSexo(event.target.value)}
             />
             <b>Masculino</b>
@@ -157,6 +171,7 @@ const App = () => {
               type="radio"
               name="sexo"
               value="Indefinido"
+              checked={sexo === "Indefinido"}
               onChange={(event) => setSexo(event.target.value)}
             />
             <b>Indefinido</b>
@@ -170,6 +185,7 @@ const App = () => {
               type="radio"
               name="caidas"
               value="No"
+              checked={caidas === "No"}
               onChange={(event) => setCaidas(event.target.value)}
             />
             <b>No</b>
@@ -179,6 +195,7 @@ const App = () => {
               type="radio"
               name="caidas"
               value="Si"
+              checked={caidas === "Si"}
               onChange={(event) => setCaidas(event.target.value)}
             />
             <b>Sí</b>
@@ -193,6 +210,7 @@ const App = () => {
               name="medicamentos"
               id="Ninguno"
               value="Ninguno"
+              checked={medicamentos.includes("Ninguno")}
               onChange={handleCheckboxChange}
             />
             <b>Ninguno</b>
@@ -203,6 +221,7 @@ const App = () => {
               name="medicamentos"
               id="Tranquilizantes/Sedantes"
               value="Tranquilizantes/Sedantes"
+              checked={medicamentos.includes("Tranquilizantes/Sedantes")}
               onChange={handleCheckboxChange}
             />
             <b>Tranquilizantes/Sedantes</b>
@@ -213,6 +232,7 @@ const App = () => {
               name="medicamentos"
               id="Diureticos"
               value="Diureticos"
+              checked={medicamentos.includes("Diureticos")}
               onChange={handleCheckboxChange}
             />
             <b>Diuréticos</b>
@@ -223,6 +243,7 @@ const App = () => {
               name="medicamentos"
               id="Hipotensores"
               value="Hipotensores"
+              checked={medicamentos.includes("Hipotensores")}
               onChange={handleCheckboxChange}
             />
             <b>Hipotensores</b>
@@ -233,6 +254,7 @@ const App = () => {
               name="medicamentos"
               id="Antiparkinsonianos"
               value="Antiparkinsoninos"
+              checked={medicamentos.includes("Antiparkinsoninos")}
               onChange={handleCheckboxChange}
             />
             <b>Antiparkinsonianos</b>
@@ -243,6 +265,7 @@ const App = () => {
               name="medicamentos"
               id="Antidepresivos"
               value="Antidepresivos"
+              checked={medicamentos.includes("Antidepresivos")}
               onChange={handleCheckboxChange}
             />
             <b>Antidepresivos</b>
@@ -253,6 +276,7 @@ const App = () => {
               name="medicamentos"
               id="Otros medicamentos"
               value="Otros medicamentos"
+              checked={medicamentos.includes("Otros medicamentos")}
               onChange={handleCheckboxChange}
             />
             <b>Otros medicamentos</b>
@@ -269,6 +293,7 @@ const App = () => {
               name="deficit"
               id="Ninguno"
               value="Ninguno"
+              checked={deficit.includes("Ninguno")}
               onChange={handleDeficitChange}
             />
             <b>Ninguno</b>
@@ -279,6 +304,7 @@ const App = () => {
               name="deficit"
               id="Alteraciones Visuales"
               value="Alteraciones Visuales"
+              checked={deficit.includes("Alteraciones Visuales")}
               onChange={handleDeficitChange}
             />
             <b>Alteraciones Visuales</b>
@@ -289,6 +315,7 @@ const App = () => {
               name="deficit"
               id="Alteraciones Audiovisuales"
               value="Alteraciones Audiovisuales"
+              checked={deficit.includes("Alteraciones Audiovisuales")}
               onChange={handleDeficitChange}
             />
             <b>Alteraciones Audiovisuales</b>
@@ -299,6 +326,7 @@ const App = () => {
               name="deficit"
               id="Extremidades"
               value="Extremidades"
+              checked={deficit.includes("Extremidades")}
               onChange={handleDeficitChange}
             />
 
@@ -311,6 +339,7 @@ const App = () => {
             <input type="radio" 
             name="estado" 
             value="Orientado"
+            checked={estado === "Orientado"}
             onChange={(event) => setEstado(event.target.value)} />
 
             <b>Orientado</b>
@@ -319,6 +348,7 @@ const App = () => {
             <input type="radio" 
             name="estado"
             value="Confuso"
+            checked={estado === "Confuso"}
             onChange={(event) => setEstado(event.target.value)} />
             <b>Confuso</b>
           </label>
@@ -330,6 +360,7 @@ const App = () => {
               type="radio"
               name="deambulacion"
               value="Normal"
+              checked={deambulacion === "Normal"}
               onChange={(event) => setDeambulacion(event.target.value)}
             />
             <b>Normal</b>
@@ -339,6 +370,7 @@ const App = () => {
               type="radio"
               name="deambulacion"
               value="Segura con ayuda"
+              checked={deambulacion === "Segura con ayuda"}
               onChange={(event) => setDeambulacion(event.target.value)}
             />
             <b>Segura con ayuda</b>
@@ -348,6 +380,7 @@ const App = () => {
               type="radio"
               name="deambulacion"
               value="Insegura con ayuda / Sin ayuda"
+              checked={deambulacion === "Insegura con ayuda / Sin ayuda"}
               onChange={(event) => setDeambulacion(event.target.value)}
             />
             <b>Insegura con ayuda / Sin ayuda</b>
@@ -357,6 +390,7 @@ const App = () => {
               type="radio"
               name="deambulacion"
               value="Imposible"
+              checked={deambulacion === "Imposible"}
               onChange={(event) => setDeambulacion(event.target.value)}
 
             />
@@ -372,6 +406,7 @@ const App = () => {
               type="radio"
               name="edad"
               value="Menor de 70"
+              checked={edad === "Menor de 70"}
               onChange={(event) => setEdad(event.target.value)}
             />
             <b>Menor de 70</b>
@@ -381,6 +416,7 @@ const App = () => {
               type="radio"
               name="edad"
               value="Mayor de 70"
+              checked={edad === "Mayor de 70"}
               onChange={(event) => setEdad(event.target.value)}
             />
             <b>Mayor de 70</b>
@@ -388,10 +424,11 @@ const App = () => {
           {/* Otros radios */}
         </div>
         <br />
+        {/* Botón para enviar el formulario */}
         <button className="btn_1" onClick={add}>
           Listo
         </button>{" "}
-        {/* Botón para enviar el formulario */}
+        
       </div>
     </div>
 
