@@ -9,17 +9,102 @@ const App = () => {
   const [nombre, setNombre] = useState("");
   const [num_id, setNum_id] = useState("");
   const [sexo, setSexo] = useState("");
-  const [caidas, setCaidas] = useState("");
+  const [caidas,setCaidas] = useState("");
   const [medicamentos, setMedicamentos] = useState([]);
   const [deficit, setDeficit] = useState([]);
-  const [estado, setEstado] = useState("");
+  const [estado,setEstado] = useState("");
   const [deambulacion, setDeambulacion] = useState("");
   const [edad, setEdad] = useState("");
+  const [puntajeTotal, setPuntajeTotal] = useState(0)
 
-
+  const actualizarPuntaje = (seccion, valor) => {
+    setPuntajeTotal(prevPuntaje => {
+      let nuevoPuntaje = prevPuntaje;
+      switch(seccion) {
+        case 'caidas':
+          nuevoPuntaje += valor === "Si" ? 1 : 0;
+          break;
+        case 'medicamentos':
+          nuevoPuntaje = valor.length > 0 && !valor.includes("Ninguno") ? valor.length : 0;
+          
+          break;
+        case 'deficit':
+          nuevoPuntaje = valor.length > 0 && !valor.includes("Ninguno") ? valor.length : 0;
+          break;
+        case 'estado':
+          nuevoPuntaje += valor === "Confuso" ? 1 : 0;
+          break;
+        case 'deambulacion':
+          nuevoPuntaje += valor === "Normal" ? 0 : 1;
+          break;
+        case 'edad':
+          nuevoPuntaje += valor === "Mayor de 70" ? 1 : 0;
+          break;
+        default:
+          break;
+      }
+      return nuevoPuntaje;
+    });
+  };
   
   
+  
+  // Actualizar las funciones de manejo de cambios
+  const handleCaidasChange = (valor) => {
+    setCaidas(valor);
+    actualizarPuntaje('caidas', valor);
+  };
+  
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    let nuevosMedicamentos;
+    if (checked) {
+      if (!medicamentos.includes(value)) {
+        nuevosMedicamentos = [...medicamentos, value];
+      }
+    } else {
+      nuevosMedicamentos = medicamentos.filter((item) => item !== value);
+    }
+    setMedicamentos(nuevosMedicamentos);
+    actualizarPuntaje('medicamentos', nuevosMedicamentos);
+  };
+  
+  const handleDeficitChange = (event) => {
+    const { value, checked } = event.target;
+    let nuevoDeficit;
+    if (checked) {
+      if (!deficit.includes(value)) {
+        nuevoDeficit = [...deficit, value];
+      }
+    } else {
+      nuevoDeficit = deficit.filter((item) => item !== value);
+    }
+    setDeficit(nuevoDeficit);
+    actualizarPuntaje('deficit', nuevoDeficit);
+  };
+  
+  
+  const handleEstadoChange = (valor) => {
+    setEstado(valor);
+    actualizarPuntaje('estado', valor);
+  };
 
+  const handleDeambulacionChange = (valor) => {
+    setDeambulacion(valor);
+    actualizarPuntaje('deambulacion', valor);
+  };
+  
+  
+  const handleEdadChange = (valor) => {
+    setEdad(valor);
+    actualizarPuntaje('edad', valor);
+  };
+
+  
+
+
+
+  /* Funcion vieja
   // Función para manejar cambios en los checkboxes de medicamentos
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
@@ -31,6 +116,9 @@ const App = () => {
       setMedicamentos(medicamentos.filter((item) => item !== value));
     }
   };
+
+  
+  
 
   // Función para manejar cambios en los checkboxes de déficit temporal
   const handleDeficitChange = (event) => {
@@ -44,6 +132,8 @@ const App = () => {
     }
   };
 
+ */
+
   const resetForm = () => {
     setNombre("");
     setNum_id("");
@@ -56,8 +146,36 @@ const App = () => {
     setEdad("");
   };
 
+
+
+  const isFormComplete = () => {
+    return (
+      nombre.trim() !== "" &&
+      num_id.trim() !== "" &&
+      sexo !== "" &&
+      caidas !== "" &&
+      medicamentos.length > 0 &&
+      deficit.length > 0 &&
+      estado !== "" &&
+      deambulacion !== "" &&
+      edad !== ""
+    );
+  };
+  
+
+  /* Funcion vieja
   // Función para enviar los datos al backend
   const add = async () => {
+    if (!isFormComplete()) {
+      Swal.fire({
+        position: "center",
+        icon: "warning",
+        title: "Formulario incompleto",
+        text: "Por favor, complete todos los campos antes de enviar.",
+        showConfirmButton: true
+      });
+      return;
+    }
     const formData = {
       nombre,
       num_id,
@@ -102,9 +220,60 @@ const App = () => {
     }
 
     
+  }; */
+
+  const add = async () => {
+    if (!isFormComplete()) {
+      Swal.fire({
+        position: "center",
+        icon: "warning",
+        title: "Formulario incompleto",
+        text: "Por favor, complete todos los campos antes de enviar.",
+        showConfirmButton: true
+      });
+      return;
+    }
+  
+    const formData = {
+      nombre,
+      num_id,
+      sexo,
+      caidas,
+      medicamentos: medicamentos.join(', '),
+      deficit: deficit.join(', '),
+      estado,
+      deambulacion,
+      edad,
+      puntajeTotal  // Añadimos el puntaje total
+    };
+  
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/datos",
+        formData
+      );
+  
+      console.log("Datos enviados exitosamente:", response.data);
+      await Swal.fire({
+        position: "center",
+        icon: "success",
+        title: `Formulario guardado. Puntaje total: ${puntajeTotal}`,
+        showConfirmButton: false,
+        timer: 1500
+      });
+  
+      resetForm();
+    } catch (error) {
+      console.error("Error al enviar los datos:", error.message);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error al enviar los datos",
+        text: "Por favor, intente nuevamente",
+        showConfirmButton: true
+      });
+    }
   };
-
-
 
   return (
 
@@ -114,7 +283,7 @@ const App = () => {
         <header className="header">
           <div className="container-header">
             <h1>
-              Escala de valoracion de ruesgo de caída <br /> (J.H. Downton)
+              Escala de valoracion de riesgo de caída <br /> (J.H. Downton)
             </h1>
           </div>
         </header>
@@ -186,7 +355,7 @@ const App = () => {
               name="caidas"
               value="No"
               checked={caidas === "No"}
-              onChange={(event) => setCaidas(event.target.value)}
+              onChange={(event) => handleCaidasChange(event.target.value)}
             />
             <b>No</b>
           </label>
@@ -196,7 +365,7 @@ const App = () => {
               name="caidas"
               value="Si"
               checked={caidas === "Si"}
-              onChange={(event) => setCaidas(event.target.value)}
+              onChange={(event) => handleCaidasChange(event.target.value)}
             />
             <b>Sí</b>
           </label>
@@ -204,6 +373,8 @@ const App = () => {
         <br />
         <div className="form-groups">
           <p>5. ¿Qué medicamentos toma?</p>
+          
+          
           <label>
             <input
               type="checkbox"
@@ -340,7 +511,7 @@ const App = () => {
             name="estado" 
             value="Orientado"
             checked={estado === "Orientado"}
-            onChange={(event) => setEstado(event.target.value)} />
+            onChange={(event) => handleEstadoChange(event.target.value)} />
 
             <b>Orientado</b>
           </label>
@@ -349,7 +520,7 @@ const App = () => {
             name="estado"
             value="Confuso"
             checked={estado === "Confuso"}
-            onChange={(event) => setEstado(event.target.value)} />
+            onChange={(event) => handleEstadoChange(event.target.value)} />
             <b>Confuso</b>
           </label>
         </div>
@@ -361,7 +532,7 @@ const App = () => {
               name="deambulacion"
               value="Normal"
               checked={deambulacion === "Normal"}
-              onChange={(event) => setDeambulacion(event.target.value)}
+              onChange={(event) => handleDeambulacionChange(event.target.value)}
             />
             <b>Normal</b>
           </label>
@@ -371,7 +542,7 @@ const App = () => {
               name="deambulacion"
               value="Segura con ayuda"
               checked={deambulacion === "Segura con ayuda"}
-              onChange={(event) => setDeambulacion(event.target.value)}
+              onChange={(event) => handleDeambulacionChange(event.target.value)}
             />
             <b>Segura con ayuda</b>
           </label>
@@ -381,7 +552,7 @@ const App = () => {
               name="deambulacion"
               value="Insegura con ayuda / Sin ayuda"
               checked={deambulacion === "Insegura con ayuda / Sin ayuda"}
-              onChange={(event) => setDeambulacion(event.target.value)}
+              onChange={(event) => handleDeambulacionChange(event.target.value)}
             />
             <b>Insegura con ayuda / Sin ayuda</b>
           </label>
@@ -391,7 +562,7 @@ const App = () => {
               name="deambulacion"
               value="Imposible"
               checked={deambulacion === "Imposible"}
-              onChange={(event) => setDeambulacion(event.target.value)}
+              onChange={(event) => handleDeambulacionChange(event.target.value)}
 
             />
             <b>Imposible</b>
@@ -407,7 +578,7 @@ const App = () => {
               name="edad"
               value="Menor de 70"
               checked={edad === "Menor de 70"}
-              onChange={(event) => setEdad(event.target.value)}
+              onChange={(event) => handleEdadChange(event.target.value)}
             />
             <b>Menor de 70</b>
           </label>
@@ -417,7 +588,7 @@ const App = () => {
               name="edad"
               value="Mayor de 70"
               checked={edad === "Mayor de 70"}
-              onChange={(event) => setEdad(event.target.value)}
+              onChange={(event) => handleEdadChange(event.target.value)}
             />
             <b>Mayor de 70</b>
           </label>
@@ -437,234 +608,3 @@ const App = () => {
 
 export default App;
 
-/*
-import React, { useState }from 'react'
-import './Login.css'
-import '../../App.css'
-import Axios from 'axios'
-
-
-
-
-const App = () => {
-  //useState para guardar las entradas
-  const [nombre, setNombre] = useState('')
-  const [num_id, setNum_id] = useState('')
-  const [sexo, setSexo] = useState("")
-  const [caidas, setCaidas] = useState('')
-  const [medicamentos, setMedicamentos] = useState('')
-  const [deficit, setDeficit] = useState('')
-  const [estadomental, setEstadomental] = useState('')
-  const [deambulacion, setDeambulacion] = useState('')
-  const [edad, setEdad] = useState('')
-
-  //onclick para obtener lo que el usuario ha ingresado
-  const add = () => {
-    //solicitar que axios cree una API que se conecte al servidor para no instalar
-    Axios.post('https://localhost:3002/create', {
-      // Crear una variable para enviar al servidor a traves de la ruta
-
-      Nombre: nombre,
-      Num_id: num_id,
-      Sexo: sexo,
-      Caidas: caidas,
-      Medicamentos: medicamentos,
-      Deficit: deficit,
-      Estadomental: estadomental,
-      Deambulacion: deambulacion,
-      Edad: edad,
-
-    }).then(() => {
-      console.log('Usuario registrado')
-    })
-  }
-
-  return (
-    <>
-      <div className="App">
-        <header className="header">
-          <div className="container-header">
-            <h1> Escala de valoración de riesgo de Caída - (J.H. Downton)</h1>
-          </div>
-        </header>
-
-        <div className="form-groups">
-          <label>
-            <h2>1. Nombre y apellidos</h2>
-          </label>
-          <input
-            onChange={(event) => {
-              setNombre(event.target.value)
-            }}
-            type="text"
-            name="name"
-            placeholder="Nombre y apellidos"
-          />
-        </div>
-        <br />
-
-        <div className="form-groups">
-          <label>
-            <h3>2. Número de documento de identificacion</h3>
-          </label>
-          <input
-            type="number"
-            name="id"
-            placeholder="Numero de identificiacion"
-            onChange={(event)=>{
-              setNum_id(event.target.value)
-            }}
-          />
-        </div>
-        <br />
-        
-        <div className="form-groups">
-          <p>3. Sexo</p>
-          <label>
-            <input type="radio" id="Femenino" name="sexo" value="1" />
-            <b>Femenino</b>
-          </label>
-          <label>
-            <input type="radio" id="Masculino" name="sexo" value="2" />
-            <b>Masculino</b>
-          </label>
-          <label>
-            <input type="radio" id="Indefinido" name="sexo" value="3" />
-            <b>Indefinido</b>
-          </label>
-        </div>
-
-        <div className="form-groups">
-          <p>4. ¿A presentado Caídas en los ultimos 3 meses?</p>
-          <label>
-            <input type="radio" id="No" name="opciones" value="1" />
-            <b>No</b>
-          </label>
-          <label>
-            <input type="radio" id="Si" name="opciones" value="2" />
-            <b>Si</b>
-          </label>
-        </div>
-
-        <div className="form-groups">
-          <p>5. ¿Qué medicamentos toma?</p>
-          <label>
-            <input type="checkbox" name="medicamentos" id="Ninguno" />
-            <b>Ninguno</b>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="medicamentos"
-              id="Tranquilizantes/Sedantes"
-            />
-            <b>Tranquilizantes/Sedantes</b>
-          </label>
-          <label>
-            <input type="checkbox" name="medicamentos" id="Diuréticos" />
-            <b>Diuréticos</b>
-          </label>
-          <label>
-            <input type="checkbox" name="medicamentos" id="Hipotensores" />
-            <b>Hipotensores</b>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="medicamentos"
-              id="Antiparkinsonianos"
-            />
-            <b>Antiparkinsonianos</b>
-          </label>
-          <label>
-            <input type="checkbox" name="medicamentos" id="Antidepresivos" />
-            <b>Antidepresivos</b>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="medicamentos"
-              id="Otros medicamentos"
-            />
-            <b>Otros medicamentos</b>
-          </label>
-        </div>
-
-        <div className="form-groups">
-          <p>6. ¿Tiene algún déficit temporal?</p>
-          <label>
-            <input type="checkbox" name="deficit" id="ninguno" />
-            <b>Ninguno</b>
-          </label>
-          <label>
-            <input type="checkbox" name="deficit" id="alteraciones_visuales" />
-            <b>Alteraciones Visuales</b>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="deficit"
-              id="alteraciones_audiovisuales"
-            />
-            <b>Alteraciones Audiovisuales</b>
-          </label>
-          <label>
-            <input type="checkbox" name="deficit" id="Extremidades" />
-            <b>Extremidades</b>
-          </label>
-        </div>
-
-        <div className="form-groups">
-          <p>7. ¿Cuál es su estado mental?</p>
-          <label>
-            <input type="radio" name="estado" />
-            <b>Orientado</b>
-          </label>
-          <label>
-            <input type="radio" name="estado" />
-            <b>Confuso</b>
-          </label>
-        </div>
-
-        <div className="form-groups">
-          <p>8. Deambulación</p>
-          <label>
-            <input type="radio" name="deambulacion" />
-            <b>Normal</b>
-          </label>
-          <label>
-            <input type="radio" name="deambulacion" />
-            <b>Segura con ayuda</b>
-          </label>
-          <label>
-            <input type="radio" name="deambulacion" />
-            <b> Insegura con ayuda/ Sin ayuda</b>
-          </label>
-          <label>
-            <input type="radio" name="deambulacion" />
-            <b>Imposible</b>
-          </label>
-        </div>
-
-        <div className="form-groups">
-          <p>9. Edad</p>
-          <label>
-            <input type="radio" name="edad" />
-            <b>Menor de 70</b>
-          </label>
-          <label>
-            <input type="radio" name="edad" />
-            <b>Mayor de 70</b>
-          </label>
-
-          <br />
-          <button onClick={add}>Listo</button>
-        </div>
-      </div>
-
-    </>
-  )
-}
-export default App
-
-*/

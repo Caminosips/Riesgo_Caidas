@@ -33,9 +33,12 @@ app.post('/api/datos', (req, res) => {
   const formData = req.body;  // Datos enviados desde el frontend
 
 
-  // Asegúrate de que los campos medicamentos y deficit sean strings
+  // Definimos los campos medicamentos y deficit sean strings
   formData.medicamentos = formData.medicamentos || '';
   formData.deficit = formData.deficit || '';
+
+  
+  formData.puntajeTotal = formData.puntajeTotal || 0;
   // Insertar los datos en la base de datos
   const sql = 'INSERT INTO datos_formulario SET ?';
 
@@ -56,6 +59,8 @@ app.listen(PORT, () => {
   console.log(`Servidor backend está corriendo en http://localhost:${PORT}`);
 });
 
+
+/*
 // Nueva ruta para el login sin hashear
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
@@ -94,4 +99,4 @@ app.get('/api/protected', verifyToken, (req, res) => {
 const PORT2 = 5000;
 app.listen(PORT2, () => {
   console.log(`Servidor backend está corriendo en http://localhost:${PORT2}`);
-});
+}); */
