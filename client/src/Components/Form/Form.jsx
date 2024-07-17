@@ -1,60 +1,104 @@
-import  { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios"; // Importamos Axios para hacer peticiones HTTP
 import "../../App.css";
 import "./Form.css";
-import  Swal  from "sweetalert2";
+import Swal from "sweetalert2";
 
 const App = () => {
   // Definimos estados para cada campo del formulario
   const [nombre, setNombre] = useState("");
   const [num_id, setNum_id] = useState("");
   const [sexo, setSexo] = useState("");
-  const [caidas,setCaidas] = useState("");
+  const [caidas, setCaidas] = useState("");
   const [medicamentos, setMedicamentos] = useState([]);
   const [deficit, setDeficit] = useState([]);
-  const [estado,setEstado] = useState("");
+  const [estado, setEstado] = useState("");
   const [deambulacion, setDeambulacion] = useState("");
   const [edad, setEdad] = useState("");
-  const [puntajeTotal, setPuntajeTotal] = useState(0)
+  const [puntajeTotal, setPuntajeTotal] = useState(0);
 
+  
+
+
+  
   const actualizarPuntaje = (seccion, valor) => {
-    setPuntajeTotal(prevPuntaje => {
+    setPuntajeTotal((prevPuntaje) => {
       let nuevoPuntaje = prevPuntaje;
-      switch(seccion) {
-        case 'caidas':
+      switch (seccion) {
+        case "caidas":
+          nuevoPuntaje -= caidas === "Si" ? 1 : 0;
           nuevoPuntaje += valor === "Si" ? 1 : 0;
           break;
-        case 'medicamentos':
-          nuevoPuntaje = valor.length > 0 && !valor.includes("Ninguno") ? valor.length : 0;
-          
+        case "medicamentos":
+          nuevoPuntaje -= medicamentos.filter(
+            (med) => med !== "Ningunmedicamento"
+          ).length;
+          nuevoPuntaje += valor.filter(
+            (med) => med !== "Ningunmedicamento"
+          ).length;
           break;
-        case 'deficit':
-          nuevoPuntaje = valor.length > 0 && !valor.includes("Ninguno") ? valor.length : 0;
+        case "deficit":
+          nuevoPuntaje -= deficit.filter(
+            (def) => def !== "Ningunmedicamento"
+          ).length;
+          nuevoPuntaje += valor.filter(
+            (def) => def !== "Ningunmedicamento"
+          ).length;
           break;
-        case 'estado':
-          nuevoPuntaje += valor === "Confuso" ? 1 : 0;
+        case "estado":
+          nuevoPuntaje =
+            prevPuntaje -
+            (estado === "Confuso" ? 1 : 0) +
+            (valor === "Confuso" ? 1 : 0);
           break;
-        case 'deambulacion':
-          nuevoPuntaje += valor === "Normal" ? 0 : 1;
-          break;
-        case 'edad':
-          nuevoPuntaje += valor === "Mayor de 70" ? 1 : 0;
+
+          case 'deambulacion':
+            if (deambulacion === "") {
+              // Si no había selección previa, simplemente añadimos 1 si no es "Normal"
+              nuevoPuntaje += valor !== "Normal" ? 1 : 0;
+            } else if (valor === "Normal") {
+              // Si la nueva selección es "Normal", restamos 1 si la anterior no lo era
+              nuevoPuntaje -= deambulacion !== "Normal" ? 1 : 0;
+            } else if (deambulacion === "Normal") {
+              // Si la selección anterior era "Normal" y la nueva no lo es, sumamos 1
+              nuevoPuntaje += 1;
+            }
+            // Si cambiamos entre opciones no normales, el puntaje no cambia
+            break;
+        case "edad":
+          nuevoPuntaje =
+            prevPuntaje -
+            (edad === "Mayor de 70" ? 1 : 0) +
+            (valor === "Mayor de 70" ? 1 : 0);
           break;
         default:
           break;
       }
-      return nuevoPuntaje;
+      return Math.max(0, nuevoPuntaje); // Asegura que el puntaje nunca sea negativo
     });
   };
-  
-  
-  
+
+
+  const interpretarPuntaje = (puntaje) => {
+    if (puntaje >= 3) {
+      return "Alto riesgo de caídas";
+    } else if (puntaje >= 1) {
+      return "Riesgo bajo Accion: Implementar plan de caidas estandar ";
+    } else {
+      return "Sin riesgo \n Acción: Cuidados básicos de enfermería";
+      
+
+    }
+    
+  };
+
+  /*
   // Actualizar las funciones de manejo de cambios
   const handleCaidasChange = (valor) => {
     setCaidas(valor);
     actualizarPuntaje('caidas', valor);
   };
-  
+
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
     let nuevosMedicamentos;
@@ -68,7 +112,7 @@ const App = () => {
     setMedicamentos(nuevosMedicamentos);
     actualizarPuntaje('medicamentos', nuevosMedicamentos);
   };
-  
+
   const handleDeficitChange = (event) => {
     const { value, checked } = event.target;
     let nuevoDeficit;
@@ -82,57 +126,81 @@ const App = () => {
     setDeficit(nuevoDeficit);
     actualizarPuntaje('deficit', nuevoDeficit);
   };
-  
-  
+
+
   const handleEstadoChange = (valor) => {
     setEstado(valor);
     actualizarPuntaje('estado', valor);
+  };
+
+
+  const handleDeambulacionChange = (valor) => {
+    setDeambulacion(valor);
+    actualizarPuntaje('deambulacion', valor);
+  };
+
+
+  const handleEdadChange = (valor) => {
+    setEdad(valor);
+    actualizarPuntaje('edad', valor);
+  };
+
+ */
+
+  const handleCaidasChange = (valor) => {
+    setCaidas(valor);
+    actualizarPuntaje("caidas", valor);
+  };
+
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    let nuevosMedicamentos;
+    if (checked) {
+      if (!medicamentos.includes(value)) {
+        nuevosMedicamentos = [...medicamentos, value];
+      } else {
+        nuevosMedicamentos = medicamentos;
+      }
+    } else {
+      nuevosMedicamentos = medicamentos.filter((item) => item !== value);
+    }
+    setMedicamentos(nuevosMedicamentos);
+    actualizarPuntaje("medicamentos", nuevosMedicamentos);
+  };
+
+  const handleDeficitChange = (event) => {
+    const { value, checked } = event.target;
+    let nuevoDeficit;
+    if (checked) {
+      if (!deficit.includes(value)) {
+        nuevoDeficit = [...deficit, value];
+      } else {
+        nuevoDeficit = deficit;
+      }
+    } else {
+      nuevoDeficit = deficit.filter((item) => item !== value);
+    }
+    setDeficit(nuevoDeficit);
+    actualizarPuntaje("deficit", nuevoDeficit);
+  };
+
+  const handleEstadoChange = (valor) => {
+    setEstado(valor);
+    actualizarPuntaje("estado", valor);
   };
 
   const handleDeambulacionChange = (valor) => {
     setDeambulacion(valor);
     actualizarPuntaje('deambulacion', valor);
   };
-  
-  
+
+
   const handleEdadChange = (valor) => {
     setEdad(valor);
-    actualizarPuntaje('edad', valor);
+    actualizarPuntaje("edad", valor);
   };
 
   
-
-
-
-  /* Funcion vieja
-  // Función para manejar cambios en los checkboxes de medicamentos
-  const handleCheckboxChange = (event) => {
-    const { value, checked } = event.target;
-    if (checked) {
-      if (!medicamentos.includes(value)) {
-        setMedicamentos([...medicamentos,value]);
-      }
-    } else {
-      setMedicamentos(medicamentos.filter((item) => item !== value));
-    }
-  };
-
-  
-  
-
-  // Función para manejar cambios en los checkboxes de déficit temporal
-  const handleDeficitChange = (event) => {
-    const { value, checked } = event.target;
-    if (checked) {
-      if (!deficit.includes(value)) {
-        setDeficit([...deficit, value]);
-      }
-    } else {
-      setDeficit(deficit.filter((item) => item !== value));
-    }
-  };
-
- */
 
   const resetForm = () => {
     setNombre("");
@@ -144,10 +212,10 @@ const App = () => {
     setEstado("");
     setDeambulacion("");
     setEdad("");
+    setPuntajeTotal(0);
   };
 
-
-
+  
   const isFormComplete = () => {
     return (
       nombre.trim() !== "" &&
@@ -157,14 +225,11 @@ const App = () => {
       medicamentos.length > 0 &&
       deficit.length > 0 &&
       estado !== "" &&
-      deambulacion !== "" &&
+      deambulacion !== "" &&  // Asegúrate de que se haya seleccionado una opción
       edad !== ""
     );
   };
-  
 
-  /* Funcion vieja
-  // Función para enviar los datos al backend
   const add = async () => {
     if (!isFormComplete()) {
       Swal.fire({
@@ -172,96 +237,49 @@ const App = () => {
         icon: "warning",
         title: "Formulario incompleto",
         text: "Por favor, complete todos los campos antes de enviar.",
-        showConfirmButton: true
+        showConfirmButton: true,
       });
       return;
     }
+
     const formData = {
       nombre,
       num_id,
       sexo,
       caidas,
-      medicamentos: medicamentos.join(', '), // Convertir array a string
-      deficit: deficit.join(', '), // Convertir array a string
+      medicamentos: medicamentos.join(", "),
+      deficit: deficit.join(", "),
       estado,
       deambulacion,
       edad,
+      puntajeTotal, // Añadimos el puntaje total
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/datos",
+        formData
+      );
 
       
-    };
-
-    try {
-      // Enviar los datos mediante una solicitud POST usando Axios
-      const response = await axios.post(
-        "http://localhost:5000/api/datos",
-        formData
-      );
-
       console.log("Datos enviados exitosamente:", response.data);
-      await Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Your work has been saved",
-        showConfirmButton: false,
-        timer: 1500
-      });
-
-      resetForm();
-    } catch (error) {
-      console.error("Error al enviar los datos:", error.message);
       Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "Error al enviar los datos",
-        text: "Por favor, intente nuevamente",
-        showConfirmButton: true
-      });
-    
-    }
-
-    
-  }; */
-
-  const add = async () => {
-    if (!isFormComplete()) {
-      Swal.fire({
-        position: "center",
-        icon: "warning",
-        title: "Formulario incompleto",
-        text: "Por favor, complete todos los campos antes de enviar.",
-        showConfirmButton: true
-      });
-      return;
-    }
-  
-    const formData = {
-      nombre,
-      num_id,
-      sexo,
-      caidas,
-      medicamentos: medicamentos.join(', '),
-      deficit: deficit.join(', '),
-      estado,
-      deambulacion,
-      edad,
-      puntajeTotal  // Añadimos el puntaje total
-    };
-  
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/datos",
-        formData
-      );
-  
-      console.log("Datos enviados exitosamente:", response.data);
+      title: "Sweet!",
+      text: "Modal with a custom image.",
+      imageUrl: "https://unsplash.it/400/200",
+      imageWidth: 400,
+      imageHeight: 200,
+      imageAlt: "Custom image"
+    });
+      /*
       await Swal.fire({
         position: "center",
         icon: "success",
         title: `Formulario guardado. Puntaje total: ${puntajeTotal}`,
         showConfirmButton: false,
-        timer: 1500
-      });
-  
+        timer: 1500,
+      }); */
+
       resetForm();
     } catch (error) {
       console.error("Error al enviar los datos:", error.message);
@@ -270,14 +288,12 @@ const App = () => {
         icon: "error",
         title: "Error al enviar los datos",
         text: "Por favor, intente nuevamente",
-        showConfirmButton: true
+        showConfirmButton: true,
       });
     }
   };
 
   return (
-
-  
     <div className="formpage flex">
       <div className="App">
         <header className="header">
@@ -298,7 +314,6 @@ const App = () => {
           type="text"
           name="name"
           placeholder="Nombre y apellidos"
-        
         />
         <br />
         <label>
@@ -310,7 +325,6 @@ const App = () => {
           name="id"
           placeholder="Número de identificación"
           onChange={(event) => setNum_id(event.target.value)}
-          
         />
         <br />
         <div className="form-groups">
@@ -355,6 +369,8 @@ const App = () => {
               name="caidas"
               value="No"
               checked={caidas === "No"}
+              //onChange={handleCaidasChange}
+
               onChange={(event) => handleCaidasChange(event.target.value)}
             />
             <b>No</b>
@@ -365,6 +381,8 @@ const App = () => {
               name="caidas"
               value="Si"
               checked={caidas === "Si"}
+              //onChange={handleCaidasChange}
+
               onChange={(event) => handleCaidasChange(event.target.value)}
             />
             <b>Sí</b>
@@ -373,15 +391,14 @@ const App = () => {
         <br />
         <div className="form-groups">
           <p>5. ¿Qué medicamentos toma?</p>
-          
-          
+
           <label>
             <input
               type="checkbox"
               name="medicamentos"
-              id="Ninguno"
-              value="Ninguno"
-              checked={medicamentos.includes("Ninguno")}
+              id="Ningunmedicamento"
+              value="Ningunmedicamento"
+              checked={medicamentos.includes("Ningunmedicamento")}
               onChange={handleCheckboxChange}
             />
             <b>Ninguno</b>
@@ -462,9 +479,9 @@ const App = () => {
             <input
               type="checkbox"
               name="deficit"
-              id="Ninguno"
-              value="Ninguno"
-              checked={deficit.includes("Ninguno")}
+              id="Ningunmedicamento"
+              value="Ningunmedicamento"
+              checked={deficit.includes("Ningunmedicamento")}
               onChange={handleDeficitChange}
             />
             <b>Ninguno</b>
@@ -507,20 +524,26 @@ const App = () => {
         <div className="form-groups">
           <p>7. ¿Cuál es su estado mental?</p>
           <label>
-            <input type="radio" 
-            name="estado" 
-            value="Orientado"
-            checked={estado === "Orientado"}
-            onChange={(event) => handleEstadoChange(event.target.value)} />
+            <input
+              type="radio"
+              name="estado"
+              value="Orientado"
+              checked={estado === "Orientado"}
+              //onChange={handleEstadoChange}
+              onChange={(event) => handleEstadoChange(event.target.value)}
+            />
 
             <b>Orientado</b>
           </label>
           <label>
-            <input type="radio" 
-            name="estado"
-            value="Confuso"
-            checked={estado === "Confuso"}
-            onChange={(event) => handleEstadoChange(event.target.value)} />
+            <input
+              type="radio"
+              name="estado"
+              value="Confuso"
+              checked={estado === "Confuso"}
+              //onChange={handleEstadoChange}
+              onChange={(event) => handleEstadoChange(event.target.value)}
+            />
             <b>Confuso</b>
           </label>
         </div>
@@ -532,6 +555,7 @@ const App = () => {
               name="deambulacion"
               value="Normal"
               checked={deambulacion === "Normal"}
+              //onChange={handleDeambulacionChange}
               onChange={(event) => handleDeambulacionChange(event.target.value)}
             />
             <b>Normal</b>
@@ -542,6 +566,7 @@ const App = () => {
               name="deambulacion"
               value="Segura con ayuda"
               checked={deambulacion === "Segura con ayuda"}
+              //onChange={handleDeambulacionChange}
               onChange={(event) => handleDeambulacionChange(event.target.value)}
             />
             <b>Segura con ayuda</b>
@@ -552,6 +577,7 @@ const App = () => {
               name="deambulacion"
               value="Insegura con ayuda / Sin ayuda"
               checked={deambulacion === "Insegura con ayuda / Sin ayuda"}
+              //onChange={handleDeambulacionChange}
               onChange={(event) => handleDeambulacionChange(event.target.value)}
             />
             <b>Insegura con ayuda / Sin ayuda</b>
@@ -562,8 +588,8 @@ const App = () => {
               name="deambulacion"
               value="Imposible"
               checked={deambulacion === "Imposible"}
+              //onChange={handleDeambulacionChange}
               onChange={(event) => handleDeambulacionChange(event.target.value)}
-
             />
             <b>Imposible</b>
           </label>
@@ -578,6 +604,7 @@ const App = () => {
               name="edad"
               value="Menor de 70"
               checked={edad === "Menor de 70"}
+              //onChange={handleEdadChange}
               onChange={(event) => handleEdadChange(event.target.value)}
             />
             <b>Menor de 70</b>
@@ -588,23 +615,24 @@ const App = () => {
               name="edad"
               value="Mayor de 70"
               checked={edad === "Mayor de 70"}
+              //onChange={handleEdadChange}
               onChange={(event) => handleEdadChange(event.target.value)}
             />
             <b>Mayor de 70</b>
           </label>
-          {/* Otros radios */}
         </div>
         <br />
         {/* Botón para enviar el formulario */}
         <button className="btn_1" onClick={add}>
           Listo
         </button>{" "}
-        
+        <div>
+          <h3>Puntaje Total: {puntajeTotal}</h3>
+          <h4>Interpretación: {interpretarPuntaje(puntajeTotal)}</h4>
+        </div>
       </div>
     </div>
-
   );
 };
 
 export default App;
-
