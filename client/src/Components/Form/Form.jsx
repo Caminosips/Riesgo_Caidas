@@ -104,7 +104,35 @@ const App = () => {
 
 
 
+  /* Funcion vieja
+  // Función para manejar cambios en los checkboxes de medicamentos
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      if (!medicamentos.includes(value)) {
+        setMedicamentos([...medicamentos,value]);
+      }
+    } else {
+      setMedicamentos(medicamentos.filter((item) => item !== value));
+    }
+  };
 
+  
+  
+
+  // Función para manejar cambios en los checkboxes de déficit temporal
+  const handleDeficitChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      if (!deficit.includes(value)) {
+        setDeficit([...deficit, value]);
+      }
+    } else {
+      setDeficit(deficit.filter((item) => item !== value));
+    }
+  };
+
+ */
 
   const resetForm = () => {
     setNombre("");
