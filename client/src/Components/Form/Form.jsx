@@ -4,6 +4,7 @@ import "../../App.css";
 import "./Form.css";
 import Swal from "sweetalert2";
 
+
 const App = () => {
   // Definimos estados para cada campo del formulario
   const [nombre, setNombre] = useState("");
@@ -266,7 +267,7 @@ const App = () => {
       Swal.fire({
       title: "Sweet!",
       text: "Modal with a custom image.",
-      imageUrl: "https://unsplash.it/400/200",
+      imageUrl: '',
       imageWidth: 400,
       imageHeight: 200,
       imageAlt: "Custom image"
