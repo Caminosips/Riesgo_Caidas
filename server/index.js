@@ -2,13 +2,12 @@ const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+
 
 const app = express();
 
 // Middleware
-app.use(cors());  // Permite solicitudes desde cualquier origen
+app.use(cors());
 app.use(bodyParser.json());  // Parsea el cuerpo de las solicitudes en formato JSON
 app.use(bodyParser.urlencoded({ extended: true }));  // Permite la decodificación de URL
 
@@ -32,6 +31,10 @@ db.connect((err) => {
 app.post('/api/datos', (req, res) => {
   const formData = req.body;  // Datos enviados desde el frontend
 
+  // Validación básica
+  if (!formData.nombre || !formData.num_id) {
+    return res.status(400).json({ error: 'Nombre y número de identificación son requeridos' });
+  }
 
   // Definimos los campos medicamentos y deficit sean strings
   formData.medicamentos = formData.medicamentos || '';
@@ -48,7 +51,10 @@ app.post('/api/datos', (req, res) => {
       res.status(500).send('Error al insertar los datos en la base de datos');
     } else {
       console.log('Datos insertados correctamente');
-      res.status(200).send('Datos insertados correctamente');
+      res.status(201).json({ 
+        message: 'Datos insertados correctamente',
+        id: result.insertId
+      });
     }
   });
 });
@@ -60,43 +66,59 @@ app.listen(PORT, () => {
 });
 
 
-/*
-// Nueva ruta para el login sin hashear
-app.post('/api/login', (req, res) => {
-  const { username, password } = req.body;
-  
-  const query = 'SELECT * FROM users WHERE username = ? AND password = ?';
-  db.query(query, [username, password], (error, results) => {
-    if (error) {
-      res.status(500).json({ success: false, message: 'Error del servidor' });
-      return;
-    }
-    
-    if (results.length > 0) {
-      const token = jwt.sign(
-        { userId: results[0].id, username: results[0].username },
-        'tu_secreto_jwt',  // Reemplaza esto con un secreto seguro
-        { expiresIn: '1h' }
-      );
-      res.json({ success: true, token, username: results[0].username });
+// Ruta para buscar resultados
+app.get('/api/resultados', (req, res) => {
+  const { busqueda } = req.query;
+  let sql = 'SELECT * FROM datos_formulario WHERE nombre LIKE ? OR num_id LIKE ?';
+  let searchTerm = `%${busqueda}%`;
+
+  db.query(sql, [searchTerm, searchTerm], (err, results) => {
+    if (err) {
+      console.error('Error al buscar resultados:', err);
+      res.status(500).json({ error: 'Error al buscar resultados' });
     } else {
-      res.json({ success: false, message: 'Credenciales incorrectas' });
+      res.json(results);
     }
   });
 });
 
-// Función de middleware para verificar el token JWT (sin cambios)
-const verifyToken = (req, res, next) => {
-  // ... (código existente sin cambios)
-};
+// Ruta para obtener un resultado específico por ID
+app.get('/api/resultados/:id', (req, res) => {
+  const { id } = req.params;
+  const sql = 'SELECT * FROM datos_formulario WHERE id = ?';
 
-// Ruta protegida de ejemplo (sin cambios)
-app.get('/api/protected', verifyToken, (req, res) => {
-  res.status(200).send('Esta es una ruta protegida');
+  db.query(sql, [id], (err, result) => {
+    if (err) {
+      console.error('Error al obtener el resultado:', err);
+      res.status(500).json({ error: 'Error al obtener el resultado' });
+    } else if (result.length === 0) {
+      res.status(404).json({ error: 'Resultado no encontrado' });
+    } else {
+      res.json(result[0]);
+    }
+  });
+});
+
+// Manejo de errores global
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Error interno del servidor' });
 });
 
 // Puerto donde el servidor Express escuchará las solicitudes
-const PORT2 = 5000;
-app.listen(PORT2, () => {
-  console.log(`Servidor backend está corriendo en http://localhost:${PORT2}`);
-}); */
+const PORTI = 5001;
+app.listen(PORTI, () => {
+  console.log(`Servidor backend está corriendo en http://localhost:${PORTI}`);
+});
+
+// Cerrar la conexión de la base de datos al cerrar el servidor
+process.on('SIGINT', () => {
+  db.end((err) => {
+    if (err) {
+      console.error('Error al cerrar la conexión de la base de datos:', err);
+    } else {
+      console.log('Conexión de la base de datos cerrada correctamente');
+    }
+    process.exit();
+  });
+});

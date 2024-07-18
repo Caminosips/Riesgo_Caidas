@@ -3,6 +3,7 @@ import axios from "axios"; // Importamos Axios para hacer peticiones HTTP
 import "../../App.css";
 import "./Form.css";
 import Swal from "sweetalert2";
+import { useNavigate } from 'react-router-dom';
 
 
 const App = () => {
@@ -17,7 +18,7 @@ const App = () => {
   const [deambulacion, setDeambulacion] = useState("");
   const [edad, setEdad] = useState("");
   const [puntajeTotal, setPuntajeTotal] = useState(0);
-
+  const navigateTo = useNavigate();
 
 
   
@@ -189,6 +190,7 @@ const App = () => {
   };
 
 
+  
   //Se mandan los datos al back
   const add = async () => {
     if (!isFormComplete()) {
@@ -215,6 +217,8 @@ const App = () => {
       edad,
       puntajeTotal,
     };
+
+    
   
     try {
       const response = await axios.post(
@@ -223,6 +227,7 @@ const App = () => {
       );
   
       console.log("Datos enviados exitosamente:", response.data);
+      navigateTo('/resultados');
       
       const { mensaje, accion } = interpretarPuntaje(puntajeTotal);
       
@@ -334,7 +339,6 @@ const App = () => {
               name="caidas"
               value="Si"
               checked={caidas === "Si"}
-
               onChange={(event) => handleCaidasChange(event.target.value)}
             />
             <b>Sí</b>
