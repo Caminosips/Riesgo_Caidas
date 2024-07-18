@@ -216,14 +216,16 @@ const App = () => {
       deambulacion,
       edad,
       puntajeTotal,
+      
     };
 
-    
+     // Si no es un número, asumimos que es un nombre y usamos LIKE
   
     try {
       const response = await axios.post(
         "http://localhost:5000/api/datos",
-        formData
+        formData,
+        
       );
   
       console.log("Datos enviados exitosamente:", response.data);
@@ -567,6 +569,8 @@ const App = () => {
           </label>
         </div>
         <br />
+
+
         {/* Botón para enviar el formulario */}
         <button className="btn_1" onClick={add}>
           Listo

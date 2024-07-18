@@ -65,40 +65,114 @@ app.listen(PORT, () => {
   console.log(`Servidor backend está corriendo en http://localhost:${PORT}`);
 });
 
+/*
+const interpretarPuntaje = (puntaje) => {
+  if (puntaje >= 3) {
+    return {
+      mensaje: "Alto riesgo de caídas",
+      accion: "Implementar medidas de prevención de caídas"
+    };
+  } else if (puntaje >= 1) {
+    return {
+      mensaje: "Riesgo bajo",
+      accion: "Implementar plan de caídas estándar"
+    };
+  } else {
+    return {
+      mensaje: "Sin riesgo",
+      accion: "Cuidados básicos de enfermería"
+    };
+  }
+}; */
 
 // Ruta para buscar resultados
 app.get('/api/resultados', (req, res) => {
   const { busqueda } = req.query;
   let sql = 'SELECT * FROM datos_formulario WHERE nombre LIKE ? OR num_id LIKE ?';
-  let searchTerm = `%${busqueda}%`;
+   // Verificar si la búsqueda es un número (asumiendo que es un ID)
+  if (!isNaN(busqueda)) {
+    sql = 'SELECT * FROM datos_formulario WHERE num_id = ?';
+    params = [busqueda];
+  } else {
+    // Si no es un número, asumimos que es un nombre y usamos LIKE
+    sql = 'SELECT * FROM datos_formulario WHERE nombre LIKE ?';
+    params = [`%${busqueda}%`];
+  }
 
   db.query(sql, [searchTerm, searchTerm], (err, results) => {
     if (err) {
       console.error('Error al buscar resultados:', err);
       res.status(500).json({ error: 'Error al buscar resultados' });
     } else {
-      res.json(results);
+    // Añadir interpretación a cada resultado
+    const resultadosConInterpretacion = results.map(result => {
+      const interpretacion = interpretarPuntaje(result.puntajeTotal);
+      return { ...result, ...interpretacion };
+    });
+    res.json(resultadosConInterpretacion);
     }
   });
 });
+
+
 
 // Ruta para obtener un resultado específico por ID
-app.get('/api/resultados/:id', (req, res) => {
-  const { id } = req.params;
-  const sql = 'SELECT * FROM datos_formulario WHERE id = ?';
+app.get('/api/resultados', (req, res) => {
+  const { busqueda } = req.query;
+  console.log('Búsqueda recibida:', busqueda);
 
-  db.query(sql, [id], (err, result) => {
+  let sql, params;
+
+  if (!isNaN(busqueda)) {
+    sql = 'SELECT * FROM datos_formulario WHERE num_id = ?';
+    params = [busqueda];
+  } else {
+    sql = 'SELECT * FROM datos_formulario WHERE nombre LIKE ?';
+    params = [`%${busqueda}%`];
+  }
+
+  console.log('SQL query:', sql);
+  console.log('Params:', params);
+
+  db.query(sql, params, (err, results) => {
     if (err) {
-      console.error('Error al obtener el resultado:', err);
-      res.status(500).json({ error: 'Error al obtener el resultado' });
-    } else if (result.length === 0) {
-      res.status(404).json({ error: 'Resultado no encontrado' });
+      console.error('Error al buscar resultados:', err);
+      res.status(500).json({ error: 'Error al buscar resultados' });
     } else {
-      res.json(result[0]);
+      console.log('Resultados de la base de datos:', results);
+
+      const resultadosConInterpretacion = results.map(result => {
+        console.log('Puntaje total:', result.puntajeTotal);
+        const interpretacion = interpretarPuntaje(result.puntajeTotal);
+        console.log('Interpretación:', interpretacion);
+        return { ...result, ...interpretacion };
+      });
+
+      console.log('Resultados finales:', resultadosConInterpretacion);
+      res.json(resultadosConInterpretacion);
     }
   });
 });
 
+function interpretarPuntaje(puntaje) {
+  console.log('Interpretando puntaje:', puntaje);
+  if (puntaje >= 3) {
+    return {
+      mensaje: "Alto riesgo de caídas",
+      accion: "Implementar medidas de prevención de caídas"
+    };
+  } else if (puntaje >= 1) {
+    return {
+      mensaje: "Riesgo bajo",
+      accion: "Implementar plan de caídas estándar"
+    };
+  } else {
+    return {
+      mensaje: "Sin riesgo",
+      accion: "Cuidados básicos de enfermería"
+    };
+  }
+}
 // Manejo de errores global
 app.use((err, req, res, next) => {
   console.error(err.stack);
