@@ -13,7 +13,7 @@ const Login = ({setUser}) => {
     const [contraseña,setContraseña] = useState("")
     const navigateTo = useNavigate()
     
-
+    
 
     const handleSubmit = (e) => {
       e.preventDefault()
@@ -54,18 +54,20 @@ const Login = ({setUser}) => {
             <FaUser className="icon" />
           </div>
 
-          <div className="input-box">
-            <input type={ showPwd ? "text" :  "password"}
+        <div className="input-box">
+          <input 
+            type={showPwd ? "text" : "password"}
             required 
             placeholder="Contraseña"
             value={contraseña}
             onChange={e => setContraseña(e.target.value)}
-            
-            />
-              <FaEyeSlash className="icon" onClick={() => setShowPwd(!showPwd)}>
-                {showPwd ?  IoEye :  FaEyeSlash }
-              </FaEyeSlash>
-          </div>
+          />
+          {showPwd ? (
+            <IoEye className="icon" onClick={() => setShowPwd(!showPwd)} />
+          ) : (
+            <FaEyeSlash className="icon" onClick={() => setShowPwd(!showPwd)} />
+          )}
+        </div>
 
           <button type="submit" onClick={LoginUser}>Login</button>
 
