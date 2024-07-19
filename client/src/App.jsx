@@ -1,6 +1,7 @@
 import './App.css'
 import Form from './Components/Form/Form'
 import Login from './Components/Login/Login'
+import ResultadosPage from './Components/ResultadosPage/ResultadosPage'
 import { useState } from 'react'
 
 
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: '/form',
     element: <div><Form/></div>
+  }, 
+  {
+    path: 'resultados',
+    element: <ResultadosPage />
   }
 
 ]) 

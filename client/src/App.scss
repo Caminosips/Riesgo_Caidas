@@ -180,11 +180,40 @@
   }
 
   @media screen and (max-width: 480px) {
-    .App {
-      width: 100%;
-      min-height: 100vh;
+    .formpage {
+      .App {
+        padding: 15px;
+      }
+      .header h1 {
+        font-size: 18px;
+      }
+  
+      .form-groups {
+        p {
+          font-size: 14px;
+        }
+  
+        label b {
+          font-size: 12px;
+        }
+      }
+  
+      input[type="text"],
+      input[type="number"] {
+        font-size: 12px;
+      }
+  
+      h2 {
+        font-size: 14px;
+      }
+  
+      button {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+
     }
-  }
+  } 
 }
 
 
@@ -297,9 +326,20 @@
   }
 
 
+.resultadosPage{
+
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
 
 
-  
+
+
+
 
 
 

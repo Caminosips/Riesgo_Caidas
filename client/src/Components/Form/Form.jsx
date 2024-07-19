@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios"; // Importamos Axios para hacer peticiones HTTP
 import "../../App.css";
 import "./Form.css";
 import Swal from "sweetalert2";
+import { useNavigate } from 'react-router-dom';
+
 
 const App = () => {
   // Definimos estados para cada campo del formulario
@@ -16,8 +18,7 @@ const App = () => {
   const [deambulacion, setDeambulacion] = useState("");
   const [edad, setEdad] = useState("");
   const [puntajeTotal, setPuntajeTotal] = useState(0);
-
-  
+  const navigateTo = useNavigate();
 
 
   
@@ -78,80 +79,34 @@ const App = () => {
     });
   };
 
-
+  // Da la logica del puntaje y sus respectivos valores dependiendo el puntaje
   const interpretarPuntaje = (puntaje) => {
     if (puntaje >= 3) {
-      return "Alto riesgo de caídas";
+      return {
+        mensaje: "Alto riesgo de caídas",
+        accion: "Implementar medidas de prevención de caídas"
+      };
     } else if (puntaje >= 1) {
-      return "Riesgo bajo Accion: Implementar plan de caidas estandar ";
+      return {
+        mensaje: "Riesgo bajo",
+        accion: "Implementar plan de caídas estándar"
+      };
     } else {
-      return "Sin riesgo \n Acción: Cuidados básicos de enfermería";
-      
-
+      return {
+        mensaje: "Sin riesgo",
+        accion: "Cuidados básicos de enfermería"
+      };
     }
-    
   };
-
-  /*
-  // Actualizar las funciones de manejo de cambios
-  const handleCaidasChange = (valor) => {
-    setCaidas(valor);
-    actualizarPuntaje('caidas', valor);
-  };
-
-  const handleCheckboxChange = (event) => {
-    const { value, checked } = event.target;
-    let nuevosMedicamentos;
-    if (checked) {
-      if (!medicamentos.includes(value)) {
-        nuevosMedicamentos = [...medicamentos, value];
-      }
-    } else {
-      nuevosMedicamentos = medicamentos.filter((item) => item !== value);
-    }
-    setMedicamentos(nuevosMedicamentos);
-    actualizarPuntaje('medicamentos', nuevosMedicamentos);
-  };
-
-  const handleDeficitChange = (event) => {
-    const { value, checked } = event.target;
-    let nuevoDeficit;
-    if (checked) {
-      if (!deficit.includes(value)) {
-        nuevoDeficit = [...deficit, value];
-      }
-    } else {
-      nuevoDeficit = deficit.filter((item) => item !== value);
-    }
-    setDeficit(nuevoDeficit);
-    actualizarPuntaje('deficit', nuevoDeficit);
-  };
-
-
-  const handleEstadoChange = (valor) => {
-    setEstado(valor);
-    actualizarPuntaje('estado', valor);
-  };
-
-
-  const handleDeambulacionChange = (valor) => {
-    setDeambulacion(valor);
-    actualizarPuntaje('deambulacion', valor);
-  };
-
-
-  const handleEdadChange = (valor) => {
-    setEdad(valor);
-    actualizarPuntaje('edad', valor);
-  };
-
- */
-
+  
+  //Funcion para manejar los input de caidas
   const handleCaidasChange = (valor) => {
     setCaidas(valor);
     actualizarPuntaje("caidas", valor);
   };
 
+
+  //Funcion para manejar los checkbox de medicamentos
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
     let nuevosMedicamentos;
@@ -168,6 +123,8 @@ const App = () => {
     actualizarPuntaje("medicamentos", nuevosMedicamentos);
   };
 
+
+  //Funcion para manejar los checkbox de deficit
   const handleDeficitChange = (event) => {
     const { value, checked } = event.target;
     let nuevoDeficit;
@@ -184,24 +141,26 @@ const App = () => {
     actualizarPuntaje("deficit", nuevoDeficit);
   };
 
+  //Funcion para manejar los input de estado
   const handleEstadoChange = (valor) => {
     setEstado(valor);
     actualizarPuntaje("estado", valor);
   };
 
+  //Funcion para manejar los input de deambulacion
   const handleDeambulacionChange = (valor) => {
     setDeambulacion(valor);
     actualizarPuntaje('deambulacion', valor);
   };
 
-
+  //Funcion para manejar los input de Edad
   const handleEdadChange = (valor) => {
     setEdad(valor);
     actualizarPuntaje("edad", valor);
   };
 
   
-
+  //Se reinicia el formulario cada que se envie 
   const resetForm = () => {
     setNombre("");
     setNum_id("");
@@ -215,7 +174,7 @@ const App = () => {
     setPuntajeTotal(0);
   };
 
-  
+  //No deja enviar el formulario si esta vacio
   const isFormComplete = () => {
     return (
       nombre.trim() !== "" &&
@@ -225,13 +184,17 @@ const App = () => {
       medicamentos.length > 0 &&
       deficit.length > 0 &&
       estado !== "" &&
-      deambulacion !== "" &&  // Asegúrate de que se haya seleccionado una opción
+      deambulacion !== "" &&  
       edad !== ""
     );
   };
 
+
+  
+  //Se mandan los datos al back
   const add = async () => {
     if (!isFormComplete()) {
+      //Alerta por si se manda el formulario vacio
       Swal.fire({
         position: "center",
         icon: "warning",
@@ -241,7 +204,7 @@ const App = () => {
       });
       return;
     }
-
+  
     const formData = {
       nombre,
       num_id,
@@ -252,34 +215,32 @@ const App = () => {
       estado,
       deambulacion,
       edad,
-      puntajeTotal, // Añadimos el puntaje total
+      puntajeTotal,
+      
     };
 
+     // Si no es un número, asumimos que es un nombre y usamos LIKE
+  
     try {
       const response = await axios.post(
         "http://localhost:5000/api/datos",
-        formData
+        formData,
+        
       );
-
-      
+  
       console.log("Datos enviados exitosamente:", response.data);
+      navigateTo('/resultados');
+      
+      const { mensaje, accion } = interpretarPuntaje(puntajeTotal);
+      
+      //Se muestra en la alerta el interpretar puntaje y el puntaje total
       Swal.fire({
-      title: "Sweet!",
-      text: "Modal with a custom image.",
-      imageUrl: "https://unsplash.it/400/200",
-      imageWidth: 400,
-      imageHeight: 200,
-      imageAlt: "Custom image"
-    });
-      /*
-      await Swal.fire({
-        position: "center",
-        icon: "success",
-        title: `Formulario guardado. Puntaje total: ${puntajeTotal}`,
-        showConfirmButton: false,
-        timer: 1500,
-      }); */
-
+        title: `Puntaje total: ${puntajeTotal}`,
+        html: `<b>${mensaje}</b><br>Acción: ${accion}`,
+        icon: puntajeTotal >= 3 ? "warning" : "info",
+        confirmButtonText: 'OK'
+      });
+  
       resetForm();
     } catch (error) {
       console.error("Error al enviar los datos:", error.message);
@@ -292,6 +253,7 @@ const App = () => {
       });
     }
   };
+
 
   return (
     <div className="formpage flex">
@@ -369,8 +331,6 @@ const App = () => {
               name="caidas"
               value="No"
               checked={caidas === "No"}
-              //onChange={handleCaidasChange}
-
               onChange={(event) => handleCaidasChange(event.target.value)}
             />
             <b>No</b>
@@ -381,8 +341,6 @@ const App = () => {
               name="caidas"
               value="Si"
               checked={caidas === "Si"}
-              //onChange={handleCaidasChange}
-
               onChange={(event) => handleCaidasChange(event.target.value)}
             />
             <b>Sí</b>
@@ -469,8 +427,6 @@ const App = () => {
             />
             <b>Otros medicamentos</b>
           </label>
-
-          {/* Otros checkboxes */}
         </div>
         <br />
         <div className="form-groups">
@@ -529,7 +485,6 @@ const App = () => {
               name="estado"
               value="Orientado"
               checked={estado === "Orientado"}
-              //onChange={handleEstadoChange}
               onChange={(event) => handleEstadoChange(event.target.value)}
             />
 
@@ -541,7 +496,6 @@ const App = () => {
               name="estado"
               value="Confuso"
               checked={estado === "Confuso"}
-              //onChange={handleEstadoChange}
               onChange={(event) => handleEstadoChange(event.target.value)}
             />
             <b>Confuso</b>
@@ -555,7 +509,6 @@ const App = () => {
               name="deambulacion"
               value="Normal"
               checked={deambulacion === "Normal"}
-              //onChange={handleDeambulacionChange}
               onChange={(event) => handleDeambulacionChange(event.target.value)}
             />
             <b>Normal</b>
@@ -566,7 +519,6 @@ const App = () => {
               name="deambulacion"
               value="Segura con ayuda"
               checked={deambulacion === "Segura con ayuda"}
-              //onChange={handleDeambulacionChange}
               onChange={(event) => handleDeambulacionChange(event.target.value)}
             />
             <b>Segura con ayuda</b>
@@ -577,7 +529,6 @@ const App = () => {
               name="deambulacion"
               value="Insegura con ayuda / Sin ayuda"
               checked={deambulacion === "Insegura con ayuda / Sin ayuda"}
-              //onChange={handleDeambulacionChange}
               onChange={(event) => handleDeambulacionChange(event.target.value)}
             />
             <b>Insegura con ayuda / Sin ayuda</b>
@@ -588,12 +539,10 @@ const App = () => {
               name="deambulacion"
               value="Imposible"
               checked={deambulacion === "Imposible"}
-              //onChange={handleDeambulacionChange}
               onChange={(event) => handleDeambulacionChange(event.target.value)}
             />
             <b>Imposible</b>
           </label>
-          {/* Otros checkboxes */}
         </div>
         <br />
         <div className="form-groups">
@@ -604,7 +553,6 @@ const App = () => {
               name="edad"
               value="Menor de 70"
               checked={edad === "Menor de 70"}
-              //onChange={handleEdadChange}
               onChange={(event) => handleEdadChange(event.target.value)}
             />
             <b>Menor de 70</b>
@@ -615,21 +563,19 @@ const App = () => {
               name="edad"
               value="Mayor de 70"
               checked={edad === "Mayor de 70"}
-              //onChange={handleEdadChange}
               onChange={(event) => handleEdadChange(event.target.value)}
             />
             <b>Mayor de 70</b>
           </label>
         </div>
         <br />
+
+
         {/* Botón para enviar el formulario */}
         <button className="btn_1" onClick={add}>
           Listo
         </button>{" "}
-        <div>
-          <h3>Puntaje Total: {puntajeTotal}</h3>
-          <h4>Interpretación: {interpretarPuntaje(puntajeTotal)}</h4>
-        </div>
+        
       </div>
     </div>
   );
