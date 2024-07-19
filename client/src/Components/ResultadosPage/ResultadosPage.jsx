@@ -42,7 +42,7 @@ const ResultadosPage = () => {
               {Object.entries(resultado).map(([key, value]) => (
                 <p key={key}><strong>{key}:</strong> {
                   key === 'mensaje' || key === 'accion' 
-                    ? <span style={{color: 'blue'}}>{value}</span> 
+                    ? <span>{value}</span> 
                     : Array.isArray(value) ? value.join(', ') : value
                 }</p>
               ))}
