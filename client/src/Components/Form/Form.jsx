@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios"; // Importamos Axios para hacer peticiones HTTP
 import "../../App.css";
 import "./Form.css";
+import Navbar from "./Navbar"
 import Swal from "sweetalert2";
 import { useNavigate } from 'react-router-dom';
 
@@ -229,7 +230,6 @@ const App = () => {
       );
   
       console.log("Datos enviados exitosamente:", response.data);
-      navigateTo('/resultados');
       
       const { mensaje, accion } = interpretarPuntaje(puntajeTotal);
       
@@ -257,6 +257,7 @@ const App = () => {
 
   return (
     <div className="formpage flex">
+    <Navbar />
       <div className="App">
         <header className="header">
           <div className="container-header">
@@ -578,6 +579,7 @@ const App = () => {
         
       </div>
     </div>
+    
   );
 };
 
