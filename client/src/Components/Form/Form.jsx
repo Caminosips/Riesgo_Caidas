@@ -1,13 +1,11 @@
-import { useState } from "react";
-import axios from "axios"; // Importamos Axios para hacer peticiones HTTP
+import React, { useState } from "react";
+import axios from "axios";
 import "../../App.css";
 import "./Form.css";
 import Swal from "sweetalert2";
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-
-const App = () => {
-  // Definimos estados para cada campo del formulario
+const Form = () => {
   const [nombre, setNombre] = useState("");
   const [num_id, setNum_id] = useState("");
   const [sexo, setSexo] = useState("");
@@ -18,10 +16,7 @@ const App = () => {
   const [deambulacion, setDeambulacion] = useState("");
   const [edad, setEdad] = useState("");
   const [puntajeTotal, setPuntajeTotal] = useState(0);
-  const navigateTo = useNavigate();
 
-
-  
   const actualizarPuntaje = (seccion, valor) => {
     setPuntajeTotal((prevPuntaje) => {
       let nuevoPuntaje = prevPuntaje;
@@ -31,55 +26,35 @@ const App = () => {
           nuevoPuntaje += valor === "Si" ? 1 : 0;
           break;
         case "medicamentos":
-          nuevoPuntaje -= medicamentos.filter(
-            (med) => med !== "Ningunmedicamento"
-          ).length;
-          nuevoPuntaje += valor.filter(
-            (med) => med !== "Ningunmedicamento"
-          ).length;
+          nuevoPuntaje -= medicamentos.filter(med => med !== "Ningunmedicamento").length;
+          nuevoPuntaje += valor.filter(med => med !== "Ningunmedicamento").length;
           break;
         case "deficit":
-          nuevoPuntaje -= deficit.filter(
-            (def) => def !== "Ningunmedicamento"
-          ).length;
-          nuevoPuntaje += valor.filter(
-            (def) => def !== "Ningunmedicamento"
-          ).length;
+          nuevoPuntaje -= deficit.filter(def => def !== "Ningunmedicamento").length;
+          nuevoPuntaje += valor.filter(def => def !== "Ningunmedicamento").length;
           break;
         case "estado":
-          nuevoPuntaje =
-            prevPuntaje -
-            (estado === "Confuso" ? 1 : 0) +
-            (valor === "Confuso" ? 1 : 0);
+          nuevoPuntaje = prevPuntaje - (estado === "Confuso" ? 1 : 0) + (valor === "Confuso" ? 1 : 0);
           break;
-
-          case 'deambulacion':
-            if (deambulacion === "") {
-              // Si no había selección previa, simplemente añadimos 1 si no es "Normal"
-              nuevoPuntaje += valor !== "Normal" ? 1 : 0;
-            } else if (valor === "Normal") {
-              // Si la nueva selección es "Normal", restamos 1 si la anterior no lo era
-              nuevoPuntaje -= deambulacion !== "Normal" ? 1 : 0;
-            } else if (deambulacion === "Normal") {
-              // Si la selección anterior era "Normal" y la nueva no lo es, sumamos 1
-              nuevoPuntaje += 1;
-            }
-            // Si cambiamos entre opciones no normales, el puntaje no cambia
-            break;
+        case 'deambulacion':
+          if (deambulacion === "") {
+            nuevoPuntaje += valor !== "Normal" ? 1 : 0;
+          } else if (valor === "Normal") {
+            nuevoPuntaje -= deambulacion !== "Normal" ? 1 : 0;
+          } else if (deambulacion === "Normal") {
+            nuevoPuntaje += 1;
+          }
+          break;
         case "edad":
-          nuevoPuntaje =
-            prevPuntaje -
-            (edad === "Mayor de 70" ? 1 : 0) +
-            (valor === "Mayor de 70" ? 1 : 0);
+          nuevoPuntaje = prevPuntaje - (edad === "Mayor de 70" ? 1 : 0) + (valor === "Mayor de 70" ? 1 : 0);
           break;
         default:
           break;
       }
-      return Math.max(0, nuevoPuntaje); // Asegura que el puntaje nunca sea negativo
+      return Math.max(0, nuevoPuntaje);
     });
   };
 
-  // Da la logica del puntaje y sus respectivos valores dependiendo el puntaje
   const interpretarPuntaje = (puntaje) => {
     if (puntaje >= 3) {
       return {
@@ -98,69 +73,45 @@ const App = () => {
       };
     }
   };
-  
-  //Funcion para manejar los input de caidas
+
   const handleCaidasChange = (valor) => {
     setCaidas(valor);
     actualizarPuntaje("caidas", valor);
   };
 
-
-  //Funcion para manejar los checkbox de medicamentos
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
-    let nuevosMedicamentos;
-    if (checked) {
-      if (!medicamentos.includes(value)) {
-        nuevosMedicamentos = [...medicamentos, value];
-      } else {
-        nuevosMedicamentos = medicamentos;
-      }
-    } else {
-      nuevosMedicamentos = medicamentos.filter((item) => item !== value);
-    }
+    let nuevosMedicamentos = checked
+      ? [...medicamentos, value]
+      : medicamentos.filter(item => item !== value);
     setMedicamentos(nuevosMedicamentos);
     actualizarPuntaje("medicamentos", nuevosMedicamentos);
   };
 
-
-  //Funcion para manejar los checkbox de deficit
   const handleDeficitChange = (event) => {
     const { value, checked } = event.target;
-    let nuevoDeficit;
-    if (checked) {
-      if (!deficit.includes(value)) {
-        nuevoDeficit = [...deficit, value];
-      } else {
-        nuevoDeficit = deficit;
-      }
-    } else {
-      nuevoDeficit = deficit.filter((item) => item !== value);
-    }
+    let nuevoDeficit = checked
+      ? [...deficit, value]
+      : deficit.filter(item => item !== value);
     setDeficit(nuevoDeficit);
     actualizarPuntaje("deficit", nuevoDeficit);
   };
 
-  //Funcion para manejar los input de estado
   const handleEstadoChange = (valor) => {
     setEstado(valor);
     actualizarPuntaje("estado", valor);
   };
 
-  //Funcion para manejar los input de deambulacion
   const handleDeambulacionChange = (valor) => {
     setDeambulacion(valor);
     actualizarPuntaje('deambulacion', valor);
   };
 
-  //Funcion para manejar los input de Edad
   const handleEdadChange = (valor) => {
     setEdad(valor);
     actualizarPuntaje("edad", valor);
   };
 
-  
-  //Se reinicia el formulario cada que se envie 
   const resetForm = () => {
     setNombre("");
     setNum_id("");
@@ -174,7 +125,6 @@ const App = () => {
     setPuntajeTotal(0);
   };
 
-  //No deja enviar el formulario si esta vacio
   const isFormComplete = () => {
     return (
       nombre.trim() !== "" &&
@@ -189,12 +139,8 @@ const App = () => {
     );
   };
 
-
-  
-  //Se mandan los datos al back
   const add = async () => {
     if (!isFormComplete()) {
-      //Alerta por si se manda el formulario vacio
       Swal.fire({
         position: "center",
         icon: "warning",
@@ -216,24 +162,18 @@ const App = () => {
       deambulacion,
       edad,
       puntajeTotal,
-      
     };
 
-     // Si no es un número, asumimos que es un nombre y usamos LIKE
-  
     try {
       const response = await axios.post(
         "http://localhost:5000/api/datos",
-        formData,
-        
+        formData
       );
   
       console.log("Datos enviados exitosamente:", response.data);
-      navigateTo('/resultados');
       
       const { mensaje, accion } = interpretarPuntaje(puntajeTotal);
       
-      //Se muestra en la alerta el interpretar puntaje y el puntaje total
       Swal.fire({
         title: `Puntaje total: ${puntajeTotal}`,
         html: `<b>${mensaje}</b><br>Acción: ${accion}`,
@@ -254,10 +194,13 @@ const App = () => {
     }
   };
 
-
   return (
     <div className="formpage flex">
       <div className="App">
+        <div className="navigation-buttons">
+          <Link to="/Form" className="btn">Formulario</Link>
+          <Link to="/resultados" className="btn">Historial</Link>
+        </div>
         <header className="header">
           <div className="container-header">
             <h1>
@@ -270,9 +213,7 @@ const App = () => {
         </label>
         <input
           value={nombre}
-          onChange={(event) => {
-            setNombre(event.target.value);
-          }}
+          onChange={(event) => setNombre(event.target.value)}
           type="text"
           name="name"
           placeholder="Nombre y apellidos"
@@ -349,236 +290,88 @@ const App = () => {
         <br />
         <div className="form-groups">
           <p>5. ¿Qué medicamentos toma?</p>
-
-          <label>
-            <input
-              type="checkbox"
-              name="medicamentos"
-              id="Ningunmedicamento"
-              value="Ningunmedicamento"
-              checked={medicamentos.includes("Ningunmedicamento")}
-              onChange={handleCheckboxChange}
-            />
-            <b>Ninguno</b>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="medicamentos"
-              id="Tranquilizantes/Sedantes"
-              value="Tranquilizantes/Sedantes"
-              checked={medicamentos.includes("Tranquilizantes/Sedantes")}
-              onChange={handleCheckboxChange}
-            />
-            <b>Tranquilizantes/Sedantes</b>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="medicamentos"
-              id="Diureticos"
-              value="Diureticos"
-              checked={medicamentos.includes("Diureticos")}
-              onChange={handleCheckboxChange}
-            />
-            <b>Diuréticos</b>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="medicamentos"
-              id="Hipotensores"
-              value="Hipotensores"
-              checked={medicamentos.includes("Hipotensores")}
-              onChange={handleCheckboxChange}
-            />
-            <b>Hipotensores</b>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="medicamentos"
-              id="Antiparkinsonianos"
-              value="Antiparkinsoninos"
-              checked={medicamentos.includes("Antiparkinsoninos")}
-              onChange={handleCheckboxChange}
-            />
-            <b>Antiparkinsonianos</b>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="medicamentos"
-              id="Antidepresivos"
-              value="Antidepresivos"
-              checked={medicamentos.includes("Antidepresivos")}
-              onChange={handleCheckboxChange}
-            />
-            <b>Antidepresivos</b>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="medicamentos"
-              id="Otros medicamentos"
-              value="Otros medicamentos"
-              checked={medicamentos.includes("Otros medicamentos")}
-              onChange={handleCheckboxChange}
-            />
-            <b>Otros medicamentos</b>
-          </label>
+          {["Ningunmedicamento", "Tranquilizantes/Sedantes", "Diureticos", "Hipotensores", "Antiparkinsoninos", "Antidepresivos", "Otros medicamentos"].map((med) => (
+            <label key={med}>
+              <input
+                type="checkbox"
+                name="medicamentos"
+                value={med}
+                checked={medicamentos.includes(med)}
+                onChange={handleCheckboxChange}
+              />
+              <b>{med === "Ningunmedicamento" ? "Ninguno" : med}</b>
+            </label>
+          ))}
         </div>
         <br />
         <div className="form-groups">
           <p>6. ¿Tiene algún déficit temporal?</p>
-          <label>
-            <input
-              type="checkbox"
-              name="deficit"
-              id="Ningunmedicamento"
-              value="Ningunmedicamento"
-              checked={deficit.includes("Ningunmedicamento")}
-              onChange={handleDeficitChange}
-            />
-            <b>Ninguno</b>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="deficit"
-              id="Alteraciones Visuales"
-              value="Alteraciones Visuales"
-              checked={deficit.includes("Alteraciones Visuales")}
-              onChange={handleDeficitChange}
-            />
-            <b>Alteraciones Visuales</b>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="deficit"
-              id="Alteraciones Audiovisuales"
-              value="Alteraciones Audiovisuales"
-              checked={deficit.includes("Alteraciones Audiovisuales")}
-              onChange={handleDeficitChange}
-            />
-            <b>Alteraciones Audiovisuales</b>
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="deficit"
-              id="Extremidades"
-              value="Extremidades"
-              checked={deficit.includes("Extremidades")}
-              onChange={handleDeficitChange}
-            />
-
-            <b>Extremidades</b>
-          </label>
+          {["Ningunmedicamento", "Alteraciones Visuales", "Alteraciones Audiovisuales", "Extremidades"].map((def) => (
+            <label key={def}>
+              <input
+                type="checkbox"
+                name="deficit"
+                value={def}
+                checked={deficit.includes(def)}
+                onChange={handleDeficitChange}
+              />
+              <b>{def === "Ningunmedicamento" ? "Ninguno" : def}</b>
+            </label>
+          ))}
         </div>
         <div className="form-groups">
           <p>7. ¿Cuál es su estado mental?</p>
-          <label>
-            <input
-              type="radio"
-              name="estado"
-              value="Orientado"
-              checked={estado === "Orientado"}
-              onChange={(event) => handleEstadoChange(event.target.value)}
-            />
-
-            <b>Orientado</b>
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="estado"
-              value="Confuso"
-              checked={estado === "Confuso"}
-              onChange={(event) => handleEstadoChange(event.target.value)}
-            />
-            <b>Confuso</b>
-          </label>
+          {["Orientado", "Confuso"].map((est) => (
+            <label key={est}>
+              <input
+                type="radio"
+                name="estado"
+                value={est}
+                checked={estado === est}
+                onChange={(event) => handleEstadoChange(event.target.value)}
+              />
+              <b>{est}</b>
+            </label>
+          ))}
         </div>
         <div className="form-groups">
           <p>8. Deambulación</p>
-          <label>
-            <input
-              type="radio"
-              name="deambulacion"
-              value="Normal"
-              checked={deambulacion === "Normal"}
-              onChange={(event) => handleDeambulacionChange(event.target.value)}
-            />
-            <b>Normal</b>
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="deambulacion"
-              value="Segura con ayuda"
-              checked={deambulacion === "Segura con ayuda"}
-              onChange={(event) => handleDeambulacionChange(event.target.value)}
-            />
-            <b>Segura con ayuda</b>
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="deambulacion"
-              value="Insegura con ayuda / Sin ayuda"
-              checked={deambulacion === "Insegura con ayuda / Sin ayuda"}
-              onChange={(event) => handleDeambulacionChange(event.target.value)}
-            />
-            <b>Insegura con ayuda / Sin ayuda</b>
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="deambulacion"
-              value="Imposible"
-              checked={deambulacion === "Imposible"}
-              onChange={(event) => handleDeambulacionChange(event.target.value)}
-            />
-            <b>Imposible</b>
-          </label>
+          {["Normal", "Segura con ayuda", "Insegura con ayuda / Sin ayuda", "Imposible"].map((deam) => (
+            <label key={deam}>
+              <input
+                type="radio"
+                name="deambulacion"
+                value={deam}
+                checked={deambulacion === deam}
+                onChange={(event) => handleDeambulacionChange(event.target.value)}
+              />
+              <b>{deam}</b>
+            </label>
+          ))}
         </div>
         <br />
         <div className="form-groups">
           <p>9. Edad</p>
-          <label>
-            <input
-              type="radio"
-              name="edad"
-              value="Menor de 70"
-              checked={edad === "Menor de 70"}
-              onChange={(event) => handleEdadChange(event.target.value)}
-            />
-            <b>Menor de 70</b>
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="edad"
-              value="Mayor de 70"
-              checked={edad === "Mayor de 70"}
-              onChange={(event) => handleEdadChange(event.target.value)}
-            />
-            <b>Mayor de 70</b>
-          </label>
+          {["Menor de 70", "Mayor de 70"].map((ed) => (
+            <label key={ed}>
+              <input
+                type="radio"
+                name="edad"
+                value={ed}
+                checked={edad === ed}
+                onChange={(event) => handleEdadChange(event.target.value)}
+              />
+              <b>{ed}</b>
+            </label>
+          ))}
         </div>
         <br />
-
-
-        {/* Botón para enviar el formulario */}
         <button className="btn_1" onClick={add}>
           Listo
-        </button>{" "}
-        
+        </button>
       </div>
     </div>
   );
 };
 
-export default App;
+export default Form;

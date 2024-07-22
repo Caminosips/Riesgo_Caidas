@@ -36,6 +36,31 @@
   width: 700px;
   border-radius: 20px;
 }
+.formpage .navigation-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.formpage .navigation-buttons .btn {
+  width: 140px;
+  height: 40px;
+  margin: 0 10px;
+  background-color: #fff;
+  border: 2px solid cornflowerblue;
+  border-radius: 20px;
+  font-size: 16px;
+  color: cornflowerblue;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+.formpage .navigation-buttons .btn:hover {
+  background-color: cornflowerblue;
+  color: #fff;
+}
 .formpage h1 {
   margin-left: 20%;
   margin-top: 100px;
@@ -335,4 +360,74 @@
   font-weight: 700;
   transition: all ease 0.5s;
   margin-top: 30px;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.navigation-buttons .btn {
+  width: 140px;
+  height: 40px;
+  margin: 0 10px;
+  background-color: #fff;
+  border: 2px solid cornflowerblue;
+  border-radius: 20px;
+  font-size: 16px;
+  color: cornflowerblue;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+.navigation-buttons .btn:hover {
+  background-color: cornflowerblue;
+  color: #fff;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.navigation-buttons .btn {
+  width: 140px;
+  height: 40px;
+  margin: 0 10px;
+  background-color: #fff;
+  border: 2px solid #333;
+  border-radius: 20px;
+  font-size: 16px;
+  color: #333;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+.navigation-buttons .btn:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+.slide-enter {
+  transform: translateX(100%);
+}
+
+.slide-enter-active {
+  transform: translateX(0%);
+  transition: transform 300ms ease-in-out;
+}
+
+.slide-exit {
+  transform: translateX(0%);
+}
+
+.slide-exit-active {
+  transform: translateX(-100%);
+  transition: transform 300ms ease-in-out;
 }/*# sourceMappingURL=App.css.map */

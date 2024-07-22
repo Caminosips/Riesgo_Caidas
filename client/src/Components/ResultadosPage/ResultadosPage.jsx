@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Link } from 'react-router-dom';
 
 
 
@@ -26,40 +27,41 @@ const ResultadosPage = () => {
   return (
     <div className="resultadosPage flex">
       <div className="resultados">
-      <h1>Resultados de la Encuesta</h1>
-      <form onSubmit={buscarResultados}>
-        <input
-          isRequired
-          type="text"
-          label=""
-          placeholder="Ingrese numero de documento  o nombre del paciente "
-          className="max-w-xs"
-          value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value) }
-        
-        />
-        <button type="submit">Buscar</button>
-      </form>
-      {error && <p style={{color: 'red'}}>{error}</p>}
-      {resultados && resultados.length > 0 ? (
-        <div className="mensajeResultados">
-          <h2>Resultados del paciente:</h2>
-          {resultados.map((resultado, index) => (
-            <div key={index} >
-              <h3>Resultado {index + 1}</h3>
-              {Object.entries(resultado).map(([key, value]) => (
-                <p key={key}><strong>{key}:</strong> {
-                  key === 'mensaje' || key === 'accion' 
-                    ? <span>{value}</span> 
-                    : Array.isArray(value) ? value.join(', ') : value
-                }</p>
-              ))}
-            </div>
-          ))}
+        <div className="navigation-buttons">
+          <Link to="/Form" className="btn">Formulario</Link>
+          <Link to="/resultados" className="btn">Historial</Link>
         </div>
-      ) : resultados && resultados.length === 0 ? (
-        <p>No se encontraron resultados para la búsqueda.</p>
-      ) : null}
+        <h1>Resultados de la Encuesta</h1>
+        <form onSubmit={buscarResultados}>
+          <input
+            required
+            type="text"
+            placeholder="Ingrese número de documento o nombre del paciente"
+            className="max-w-xs"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
+          <button type="submit">Buscar</button>
+        </form>
+        {error && <p style={{color: 'red'}}>{error}</p>}
+        {resultados && resultados.length > 0 && (
+          <div className="mensajeResultados">
+            <h2>Resultados del paciente:</h2>
+            {resultados.map((resultado, index) => (
+              <div key={index}>
+                <h3>Resultado {index + 1}</h3>
+                {Object.entries(resultado).map(([key, value]) => (
+                  <p key={key}>
+                    <strong>{key}:</strong>{' '}
+                    {key === 'mensaje' || key === 'accion' 
+                      ? <span>{value}</span> 
+                      : Array.isArray(value) ? value.join(', ') : value}
+                  </p>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
