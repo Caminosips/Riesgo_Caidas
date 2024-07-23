@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../../App.css";
 import "./Form.css";
+import Navbar from "./Navbar"
 import Swal from "sweetalert2";
 import { Link } from 'react-router-dom';
 
@@ -196,6 +197,7 @@ const Form = () => {
 
   return (
     <div className="formpage flex">
+    <Navbar />
       <div className="App">
         <div className="navigation-buttons">
           <Link to="/Form" className="btn">Formulario</Link>
@@ -371,6 +373,7 @@ const Form = () => {
         </button>
       </div>
     </div>
+    
   );
 };
 
