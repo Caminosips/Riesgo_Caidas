@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const App = () => {
-  // Definimos estados para cada campo del formulario
+  // Estados para cada campo del formulario
   const [nombre, setNombre] = useState("");
   const [num_id, setNum_id] = useState("");
   const [sexo, setSexo] = useState("");
@@ -22,32 +22,36 @@ const App = () => {
   const navigateTo = useNavigate();
 
 
-  
+  // Función para actualizar el puntaje total basado en las selecciones del usuario
   const actualizarPuntaje = (seccion, valor) => {
     setPuntajeTotal((prevPuntaje) => {
       let nuevoPuntaje = prevPuntaje;
       switch (seccion) {
         case "caidas":
+           // Resta 1 si había caídas antes, suma 1 si hay caídas ahora
           nuevoPuntaje -= caidas === "Si" ? 1 : 0;
           nuevoPuntaje += valor === "Si" ? 1 : 0;
           break;
         case "medicamentos":
+           // Resta puntos por medicamentos previos y suma por nuevos, excluyendo "Ningún medicamento"
           nuevoPuntaje -= medicamentos.filter(
-            (med) => med !== "Ningunmedicamento"
+            (med) => med !== "Ningun medicamento"
           ).length;
           nuevoPuntaje += valor.filter(
-            (med) => med !== "Ningunmedicamento"
+            (med) => med !== "Ningun medicamento"
           ).length;
           break;
         case "deficit":
+          //Se hace algo similar a los medicamentos pero para el campo de deficit
           nuevoPuntaje -= deficit.filter(
-            (def) => def !== "Ningunmedicamento"
+            (def) => def !== "Ninguno"
           ).length;
           nuevoPuntaje += valor.filter(
-            (def) => def !== "Ningunmedicamento"
+            (def) => def !== "Ninguno"
           ).length;
           break;
         case "estado":
+          // Suma 1 si el estado es confuso, resta si no lo es
           nuevoPuntaje =
             prevPuntaje -
             (estado === "Confuso" ? 1 : 0) +
@@ -55,6 +59,7 @@ const App = () => {
           break;
 
           case 'deambulacion':
+            // Lógica compleja para manejar diferentes cambios en deambulación
             if (deambulacion === "") {
               // Si no había selección previa, simplemente añadimos 1 si no es "Normal"
               nuevoPuntaje += valor !== "Normal" ? 1 : 0;
@@ -68,19 +73,20 @@ const App = () => {
             // Si cambiamos entre opciones no normales, el puntaje no cambia
             break;
         case "edad":
+          // Suma 1 si es mayor de 70, resta si no lo es
           nuevoPuntaje =
             prevPuntaje -
             (edad === "Mayor de 70" ? 1 : 0) +
             (valor === "Mayor de 70" ? 1 : 0);
           break;
-        default:
+          default:
           break;
       }
       return Math.max(0, nuevoPuntaje); // Asegura que el puntaje nunca sea negativo
     });
   };
 
-  // Da la logica del puntaje y sus respectivos valores dependiendo el puntaje
+  // Interpreta el puntaje total y devuelve un mensaje y una acción recomendada
   const interpretarPuntaje = (puntaje) => {
     if (puntaje >= 3) {
       return {
@@ -100,61 +106,90 @@ const App = () => {
     }
   };
   
-  //Funcion para manejar los input de caidas
+ // Maneja el cambio en el campo de caídas
   const handleCaidasChange = (valor) => {
     setCaidas(valor);
     actualizarPuntaje("caidas", valor);
   };
 
 
-  //Funcion para manejar los checkbox de medicamentos
+  // Maneja los cambios en los checkboxes de medicamentos
   const handleCheckboxChange = (event) => {
     const { value, checked } = event.target;
     let nuevosMedicamentos;
-    if (checked) {
-      if (!medicamentos.includes(value)) {
-        nuevosMedicamentos = [...medicamentos, value];
+  
+    // Lógica para manejar selecciones mutuamente excluyentes
+    if (value === "Ningun medicamento" && checked) {
+      nuevosMedicamentos = ["Ningun medicamento"];
+    } else if (checked && value !== "Ningun medicamento") {
+      if (medicamentos.includes("Ningun medicamento")) {
+        nuevosMedicamentos = [value];
       } else {
-        nuevosMedicamentos = medicamentos;
+        nuevosMedicamentos = [...medicamentos, value];
       }
     } else {
       nuevosMedicamentos = medicamentos.filter((item) => item !== value);
     }
+  
+
+    // Evita selecciones inválidas
+    if (nuevosMedicamentos.length > 1 && nuevosMedicamentos.includes("Ningun medicamento")) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No puedes seleccionar "Ningún medicamento" junto con otros medicamentos.',
+      });
+      return;
+    }
+  
     setMedicamentos(nuevosMedicamentos);
     actualizarPuntaje("medicamentos", nuevosMedicamentos);
   };
-
-
-  //Funcion para manejar los checkbox de deficit
+  
+   // Maneja los cambios en los checkboxes de déficit (similar a medicamentos)
   const handleDeficitChange = (event) => {
     const { value, checked } = event.target;
     let nuevoDeficit;
-    if (checked) {
-      if (!deficit.includes(value)) {
-        nuevoDeficit = [...deficit, value];
+  
+    if (value === "Ninguno" && checked) {
+      nuevoDeficit = ["Ninguno"];
+    } else if (checked && value !== "Ninguno") {
+      if (deficit.includes("Ninguno")) {
+        nuevoDeficit = [value];
       } else {
-        nuevoDeficit = deficit;
+        nuevoDeficit = [...deficit, value];
       }
     } else {
       nuevoDeficit = deficit.filter((item) => item !== value);
     }
+  
+    if (nuevoDeficit.length > 1 && nuevoDeficit.includes("Ninguno")) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No puedes seleccionar "Ninguno" junto con otros déficits.',
+      });
+      return;
+    }
+  
     setDeficit(nuevoDeficit);
     actualizarPuntaje("deficit", nuevoDeficit);
   };
 
-  //Funcion para manejar los input de estado
+
+ // Maneja cambios en el campo de estado mental
   const handleEstadoChange = (valor) => {
     setEstado(valor);
     actualizarPuntaje("estado", valor);
   };
 
-  //Funcion para manejar los input de deambulacion
+ // Maneja cambios en el campo de deambulación
   const handleDeambulacionChange = (valor) => {
     setDeambulacion(valor);
     actualizarPuntaje('deambulacion', valor);
   };
 
-  //Funcion para manejar los input de Edad
+ // Maneja cambios en el campo de edad
   const handleEdadChange = (valor) => {
     setEdad(valor);
     actualizarPuntaje("edad", valor);
@@ -175,7 +210,7 @@ const App = () => {
     setPuntajeTotal(0);
   };
 
-  //No deja enviar el formulario si esta vacio
+  // Verifica si todos los campos del formulario están completos
   const isFormComplete = () => {
     return (
       nombre.trim() !== "" &&
@@ -195,7 +230,7 @@ const App = () => {
   //Se mandan los datos al back
   const add = async () => {
     if (!isFormComplete()) {
-      //Alerta por si se manda el formulario vacio
+     // Muestra una alerta si el formulario está incompleto
       Swal.fire({
         position: "center",
         icon: "warning",
@@ -206,6 +241,7 @@ const App = () => {
       return;
     }
   
+    // Prepara los datos del formulario para enviar
     const formData = {
       nombre,
       num_id,
@@ -220,7 +256,6 @@ const App = () => {
       
     };
 
-     // Si no es un número, asumimos que es un nombre y usamos LIKE
   
     try {
       const response = await axios.post(
@@ -230,7 +265,9 @@ const App = () => {
       );
   
       console.log("Datos enviados exitosamente:", response.data);
+
       
+       // Interpreta el puntaje y muestra una alerta con el resultado
       const { mensaje, accion } = interpretarPuntaje(puntajeTotal);
       
       //Se muestra en la alerta el interpretar puntaje y el puntaje total
@@ -241,8 +278,9 @@ const App = () => {
         confirmButtonText: 'OK'
       });
   
-      resetForm();
+      resetForm();// Reinicia el formulario después de enviar
     } catch (error) {
+       // Maneja errores en el envío de datos
       console.error("Error al enviar los datos:", error.message);
       Swal.fire({
         position: "center",
@@ -355,9 +393,9 @@ const App = () => {
             <input
               type="checkbox"
               name="medicamentos"
-              id="Ningunmedicamento"
-              value="Ningunmedicamento"
-              checked={medicamentos.includes("Ningunmedicamento")}
+              id="Ningun medicamento"
+              value="Ningun medicamento"
+              checked={medicamentos.includes("Ningun medicamento")}
               onChange={handleCheckboxChange}
             />
             <b>Ninguno</b>
@@ -436,9 +474,9 @@ const App = () => {
             <input
               type="checkbox"
               name="deficit"
-              id="Ningunmedicamento"
-              value="Ningunmedicamento"
-              checked={deficit.includes("Ningunmedicamento")}
+              id="Ninguno"
+              value="Ninguno"
+              checked={deficit.includes("Ninguno")}
               onChange={handleDeficitChange}
             />
             <b>Ninguno</b>
@@ -474,7 +512,6 @@ const App = () => {
               checked={deficit.includes("Extremidades")}
               onChange={handleDeficitChange}
             />
-
             <b>Extremidades</b>
           </label>
         </div>

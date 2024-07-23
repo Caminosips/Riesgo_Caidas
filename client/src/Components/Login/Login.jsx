@@ -46,7 +46,7 @@ const Login = ({setUser}) => {
           <div className="input-box">
             <input type="text" 
             required
-            placeholder="Nombre de usuario" 
+            placeholder="Numero de documento" 
             value={usuario}
             onChange={e => setUsuario(e.target.value)}
             

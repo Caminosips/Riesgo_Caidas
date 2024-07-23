@@ -163,7 +163,7 @@
   font-size: 19px;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   color: cornflowerblue;
-  transition: 0.3 ease;
+  transition: all ease 0.7s;
   background: white;
   border-radius: 10px;
 }
@@ -291,7 +291,7 @@
 }
 
 .resultadosPage {
-  margin: 0;
+  margin: 20px;
   padding: 60px 0 0 0;
   min-height: 100vh;
   display: flex;
@@ -329,11 +329,10 @@
   color: #3573cb;
 }
 .resultadosPage .resultados {
-  background-color: #ffffff;
+  background-color: #2d62a8;
   border-radius: 10px;
   margin: 20px;
-  width: 60%;
-  max-width: 800px;
+  width: 100%;
   padding: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -341,7 +340,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 95%;
+  width: 97%;
   margin: 40px 0;
   padding: 20px;
   background-color: #f5f5f5;
@@ -367,7 +366,39 @@
   border-radius: 20px;
   text-align: center;
   font-size: 20px;
-  border: 1px solid black;
+  border: 1px black;
+  background: transparent;
+  max-width: 100%;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+.resultadosPage .rdt_Table {
+  background-color: white;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.resultadosPage .rdt_TableHead {
+  background-color: #f0f0f0;
+}
+.resultadosPage .rdt_TableHeadRow {
+  font-weight: bold;
+}
+.resultadosPage .rdt_TableBody .rdt_TableRow:hover {
+  background-color: #f5f5f5;
+}
+.resultadosPage .rdt_TableCol, .resultadosPage .rdt_TableCell {
+  padding: 15px 10px;
+  font-size: 14px;
+  white-space: normal;
+  word-wrap: break-word;
+}
+.resultadosPage .rdt_TableCell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.resultadosPage .rdt_Pagination {
+  font-size: 14px;
+  color: #333;
 }
 .resultadosPage .resultados input {
   width: 80%;
@@ -385,11 +416,11 @@
   margin: 40px 0;
 }
 .resultadosPage .resultados input::-moz-placeholder {
-  color: #fff;
+  color: #000000;
   padding: 10px;
 }
 .resultadosPage .resultados input::placeholder {
-  color: #fff;
+  color: #000000;
   padding: 10px;
 }
 .resultadosPage .input-container button {
