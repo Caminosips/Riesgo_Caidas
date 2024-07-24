@@ -199,10 +199,6 @@ const Form = () => {
     <div className="formpage flex">
     <Navbar />
       <div className="App">
-        <div className="navigation-buttons">
-          <Link to="/Form" className="btn">Formulario</Link>
-          <Link to="/resultados" className="btn">Historial</Link>
-        </div>
         <header className="header">
           <div className="container-header">
             <h1>

@@ -28,6 +28,30 @@
   margin-left: -80px;
   margin-top: -10px;
 }
+.formpage .navbar {
+  width: 100%;
+  background-color: cornflowerblue;
+  padding: 15px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+.formpage .navbar ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-around;
+}
+.formpage .navbar li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+.formpage .navbar li a:hover {
+  color: black;
+}
 .formpage .App {
   display: flex;
   flex-direction: column;
@@ -36,31 +60,6 @@
   background-color: #f0e8e6;
   width: 700px;
   border-radius: 20px;
-}
-.formpage .navigation-buttons {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-.formpage .navigation-buttons .btn {
-  width: 140px;
-  height: 40px;
-  margin: 0 10px;
-  background-color: #fff;
-  border: 2px solid cornflowerblue;
-  border-radius: 20px;
-  font-size: 16px;
-  color: cornflowerblue;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.3s ease;
-}
-.formpage .navigation-buttons .btn:hover {
-  background-color: cornflowerblue;
-  color: #fff;
 }
 .formpage h1 {
   margin-left: 20%;
@@ -427,74 +426,4 @@
   margin-bottom: 20px;
   padding: 10px;
   border-radius: 5px;
-}
-
-.navigation-buttons {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-.navigation-buttons .btn {
-  width: 140px;
-  height: 40px;
-  margin: 0 10px;
-  background-color: #fff;
-  border: 2px solid cornflowerblue;
-  border-radius: 20px;
-  font-size: 16px;
-  color: cornflowerblue;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.3s ease;
-}
-.navigation-buttons .btn:hover {
-  background-color: cornflowerblue;
-  color: #fff;
-}
-
-.navigation-buttons {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-.navigation-buttons .btn {
-  width: 140px;
-  height: 40px;
-  margin: 0 10px;
-  background-color: #fff;
-  border: 2px solid #333;
-  border-radius: 20px;
-  font-size: 16px;
-  color: #333;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.3s ease;
-}
-.navigation-buttons .btn:hover {
-  background-color: #333;
-  color: #fff;
-}
-
-.slide-enter {
-  transform: translateX(100%);
-}
-
-.slide-enter-active {
-  transform: translateX(0%);
-  transition: transform 300ms ease-in-out;
-}
-
-.slide-exit {
-  transform: translateX(0%);
-}
-
-.slide-exit-active {
-  transform: translateX(-100%);
-  transition: transform 300ms ease-in-out;
 }/*# sourceMappingURL=App.css.map */

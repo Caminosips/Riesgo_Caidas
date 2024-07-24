@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Navbar from "../Form/Navbar"
+import Swal from "sweetalert2";
 
 
 
@@ -42,44 +44,48 @@ const ResultadosPage = () => {
 
 
   return (
-    <div className="resultadosPage flex">
-      <div className="resultados">
-      <h1>Resultados de la Encuesta</h1>
-      <form onSubmit={buscarResultados}>
-        <input
-          isRequired
-          type="text"
-          label=""
-          placeholder="Ingrese numero de documento  o nombre del paciente "
-          className="max-w-xs"
-          value={busqueda}
-          onChange={(e) => setBusqueda(e.target.value) }
+    <div className="resultadosPage">
+    <Navbar />
+    <div className="resultados">
+    <div className="input-container">
+        <h1>Resultados de la Encuesta</h1> 
+        <form onSubmit={buscarResultados}>
+          <input
+            required
+            type="text"
+            placeholder="Ingrese número de documento o nombre del paciente"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
         
-        />
         <button type="submit">Buscar</button>
       </form>
-      {error && <p style={{color: 'red'}}>{error}</p>}
+    </div>
+      {error && <p className="error-message">{error}</p>}
       {resultados && resultados.length > 0 ? (
         <div className="mensajeResultados">
           <h2>Resultados del paciente:</h2>
           {resultados.map((resultado, index) => (
-            <div key={index} >
+            <div key={index} className="resultado-item">
               <h3>Resultado {index + 1}</h3>
               {Object.entries(resultado).map(([key, value]) => (
-                <p key={key}><strong>{key}:</strong> {
-                  key === 'mensaje' || key === 'accion' 
-                    ? <span>{value}</span> 
-                    : Array.isArray(value) ? value.join(', ') : value
-                }</p>
+                <p key={key}>
+                  <strong>{key}:</strong>{' '}
+                  {key === 'mensaje' || key === 'accion' ? (
+                    <span>{value}</span>
+                  ) : Array.isArray(value) ? (
+                    value.join(', ')
+                  ) : (
+                    value
+                  )}
+                </p>
               ))}
             </div>
           ))}
         </div>
-      ) : resultados && resultados.length === 0 ? (
-        <p>No se encontraron resultados para la búsqueda.</p>
-      ) : null}
-      </div>
+      )  : null}
     </div>
-  );
+  </div>
+);
 };
 export default ResultadosPage;

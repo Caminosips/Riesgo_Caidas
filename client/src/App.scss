@@ -5,6 +5,7 @@
 
 .formpage{  
 
+
   body {
     margin: 0;
     padding: 0;
@@ -34,6 +35,36 @@
     margin-top: -10px;
   }
 
+  .navbar {
+    width: 100%;
+    background-color: cornflowerblue ;
+    padding: 15px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    
+  }
+  
+  .navbar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .navbar li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .navbar li a:hover {
+    color: black;
+  }
+
+  
 
   //Aplica toda la app
   .App {
@@ -46,36 +77,6 @@
     border-radius: 20px;
     
   }
-
-  .navigation-buttons {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
-
-    .btn {
-      width: 140px;
-      height: 40px;
-      margin: 0 10px;
-      background-color: #fff;
-      border: 2px solid cornflowerblue;
-      border-radius: 20px;
-      font-size: 16px;
-      color: cornflowerblue;
-      text-decoration: none;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: all 0.3s ease;
-
-      &:hover {
-        background-color: cornflowerblue;
-        color: #fff;
-      }
-    }
-  }
-
-  
 
   h1 {
     margin-left: 20%;
@@ -360,8 +361,6 @@
 
 .resultadosPage{
 
-  
-
   margin: 0;
   padding: 60px 0 0 0; // Añade padding-top para dar espacio al navbar
   min-height: 100vh; // Asegura que la página ocupe al menos toda la altura de la ventana
@@ -523,88 +522,6 @@
   }
 
 
-
-.navigation-buttons {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-
-  .btn {
-    width: 140px;
-    height: 40px;
-    margin: 0 10px;
-    background-color: #fff;
-    border: 2px solid cornflowerblue;
-    border-radius: 20px;
-    font-size: 16px;
-    color: cornflowerblue;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background-color: cornflowerblue;
-      color: #fff;
-    }
-  }
-}
-
-//... (resto de los estilos existentes)
-
-
-
-// ... (estilos existentes)
-
-.navigation-buttons {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-
-  .btn {
-    width: 140px;
-    height: 40px;
-    margin: 0 10px;
-    background-color: #fff;
-    border: 2px solid #333;
-    border-radius: 20px;
-    font-size: 16px;
-    color: #333;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background-color: #333;
-      color: #fff;
-    }
-  }
-}
-
-
-// Estilos para la transición de slide
-.slide-enter {
-  transform: translateX(100%);
-}
-
-.slide-enter-active {
-  transform: translateX(0%);
-  transition: transform 300ms ease-in-out;
-}
-
-.slide-exit {
-  transform: translateX(0%);
-}
-
-.slide-exit-active {
-  transform: translateX(-100%);
-  transition: transform 300ms ease-in-out;
-}
 
 
 
