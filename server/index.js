@@ -2,17 +2,13 @@ const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 
 const app = express();
 
-// Middleware
-app.use(cors());  // Permite solicitudes desde cualquier origen
-app.use(bodyParser.json());  // Parsea el cuerpo de las solicitudes en formato JSON
-app.use(bodyParser.urlencoded({ extended: true }));  // Permite la decodificación de URL
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Configuración de la conexión a la base de datos MySQL
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -20,83 +16,132 @@ const db = mysql.createConnection({
   database: 'riesgodb'
 });
 
-// Conectar a MySQL
 db.connect((err) => {
-  if (err) {
-    throw err;
-  }
+  if (err) throw err;
   console.log('Conexión exitosa a la base de datos MySQL');
 });
 
-// Ruta para recibir los datos del formulario
+const interpretarPuntaje = (puntaje) => {
+  console.log('Interpretando puntaje:', puntaje);
+  if (puntaje >= 3) {
+    return {
+      mensaje: "Alto riesgo de caídas",
+      accion: "Implementar medidas de prevención de caídas"
+    };
+  } else if (puntaje >= 1) {
+    return {
+      mensaje: "Riesgo bajo",
+      accion: "Implementar plan de caídas estándar"
+    };
+  } else {
+    return {
+      mensaje: "Sin riesgo",
+      accion: "Cuidados básicos de enfermería"
+    };
+  }
+};
+
 app.post('/api/datos', (req, res) => {
-  const formData = req.body;  // Datos enviados desde el frontend
+  const formData = req.body;
+  console.log('Datos recibidos:', formData);
+  console.log('Puntaje total recibido:', formData.puntajeTotal);
 
+  if (!formData.nombre || !formData.num_id) {
+    return res.status(400).json({ error: 'Nombre y número de identificación son requeridos' });
+  }
 
-  // Definimos los campos medicamentos y deficit sean strings
   formData.medicamentos = formData.medicamentos || '';
   formData.deficit = formData.deficit || '';
+  formData.puntajeTotal = Number(formData.puntajeTotal) || 0;
 
-  
-  formData.puntajeTotal = formData.puntajeTotal || 0;
-  // Insertar los datos en la base de datos
   const sql = 'INSERT INTO datos_formulario SET ?';
-
   db.query(sql, formData, (err, result) => {
     if (err) {
       console.error('Error al insertar los datos:', err);
       res.status(500).send('Error al insertar los datos en la base de datos');
     } else {
       console.log('Datos insertados correctamente');
-      res.status(200).send('Datos insertados correctamente');
+      res.status(201).json({ 
+        message: 'Datos insertados correctamente',
+        id: result.insertId,
+        puntajeTotal: formData.puntajeTotal
+      });
     }
   });
 });
 
-// Puerto donde el servidor Express escuchará las solicitudes
+app.get('/api/resultados', (req, res) => {
+  const { busqueda } = req.query;
+  console.log('Búsqueda recibida:', busqueda);
+
+  let sql, params;
+
+  if (!isNaN(busqueda)) {
+    sql = 'SELECT * FROM datos_formulario WHERE num_id = ?';
+    params = [busqueda];
+  } else {
+    sql = 'SELECT * FROM datos_formulario WHERE nombre LIKE ?';
+    params = [`%${busqueda}%`];
+  }
+
+  console.log('SQL query:', sql);
+  console.log('Params:', params);
+
+  db.query(sql, params, (err, results) => {
+    if (err) {
+      console.error('Error al buscar resultados:', err);
+      res.status(500).json({ error: 'Error al buscar resultados' });
+    } else {
+      console.log('Resultados de la base de datos:', results);
+
+      const resultadosConInterpretacion = results.map(result => {
+        console.log('Puntaje total:', result.puntajeTotal);
+        const interpretacion = interpretarPuntaje(result.puntajeTotal);
+        console.log('Interpretación:', interpretacion);
+        return { ...result, ...interpretacion };
+      });
+
+      console.log('Resultados finales:', resultadosConInterpretacion);
+      res.json(resultadosConInterpretacion);
+    }
+  });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Error interno del servidor' });
+});
+
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Servidor backend está corriendo en http://localhost:${PORT}`);
 });
 
-
-/*
-// Nueva ruta para el login sin hashear
-app.post('/api/login', (req, res) => {
-  const { username, password } = req.body;
-  
-  const query = 'SELECT * FROM users WHERE username = ? AND password = ?';
-  db.query(query, [username, password], (error, results) => {
-    if (error) {
-      res.status(500).json({ success: false, message: 'Error del servidor' });
-      return;
-    }
-    
-    if (results.length > 0) {
-      const token = jwt.sign(
-        { userId: results[0].id, username: results[0].username },
-        'tu_secreto_jwt',  // Reemplaza esto con un secreto seguro
-        { expiresIn: '1h' }
-      );
-      res.json({ success: true, token, username: results[0].username });
+process.on('SIGINT', () => {
+  db.end((err) => {
+    if (err) {
+      console.error('Error al cerrar la conexión de la base de datos:', err);
     } else {
-      res.json({ success: false, message: 'Credenciales incorrectas' });
+      console.log('Conexión de la base de datos cerrada correctamente');
     }
+    process.exit();
   });
 });
 
-// Función de middleware para verificar el token JWT (sin cambios)
-const verifyToken = (req, res, next) => {
-  // ... (código existente sin cambios)
-};
+//Creamos una ruta para el login
 
-// Ruta protegida de ejemplo (sin cambios)
-app.get('/api/protected', verifyToken, (req, res) => {
-  res.status(200).send('Esta es una ruta protegida');
+app.post('/api/login', (req, res) => {
+  const { usuario, contraseña } = req.body;
+  
+  const sql = 'SELECT * FROM users WHERE username = ? AND password = ?';
+  db.query(sql, [usuario, contraseña], (err, results) => {
+    if (err) {
+      console.error('Error al autenticar:', err);
+      res.status(500).json({ error: 'Error en la autenticación' });
+    } else if (results.length > 0) {
+      res.json({ success: true, user: results[0] });
+    } else {
+      res.status(401).json({ success: false, message: 'Credenciales inválidas' });
+    }
+  });
 });
-
-// Puerto donde el servidor Express escuchará las solicitudes
-const PORT2 = 5000;
-app.listen(PORT2, () => {
-  console.log(`Servidor backend está corriendo en http://localhost:${PORT2}`);
-}); */

@@ -20,7 +20,9 @@
     justify-content: space-between;
     align-items: center;
     font-family: "Open sans";
+    flex-direction: column;
   }
+
 
   .container-header {
     width: 100%;
@@ -33,6 +35,34 @@
     margin-top: -10px;
   }
 
+  .navbar {
+    width: 100%;
+    background-color: cornflowerblue ;
+    padding: 15px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    
+  }
+  
+  .navbar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+  }
+  
+  .navbar li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .navbar li a:hover {
+    color: black;
+  }
 
   //Aplica toda la app
   .App {
@@ -43,6 +73,7 @@
     background-color: #f0e8e6;
     width: 700px;
     border-radius: 20px;
+    
   }
 
   h1 {
@@ -66,6 +97,9 @@
     margin-left: 8.5%;
     color: black;
   }
+
+
+
 
   /* Intrucciones para el formulario*/
 
@@ -123,6 +157,7 @@
     font-weight: 300;
   }
 
+
   p {
     font-size: 23px;
     margin-top: 20px;
@@ -131,6 +166,8 @@
     font-family: "Times New Roman", Times, serif;
     font-weight: bold;
   }
+
+  
 
   input[type="radio"] {
     margin-bottom: 15px;
@@ -156,7 +193,7 @@
     font-size: 19px;
     font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
     color: cornflowerblue;
-    transition: .3 ease;
+    transition: all ease 0.7s;
     background: white;
     border-radius: 10px;
   }
@@ -167,11 +204,40 @@
   }
 
   @media screen and (max-width: 480px) {
-    .App {
-      width: 100%;
-      min-height: 100vh;
+    .formpage {
+      .App {
+        padding: 15px;
+      }
+      .header h1 {
+        font-size: 18px;
+      }
+  
+      .form-groups {
+        p {
+          font-size: 14px;
+        }
+  
+        label b {
+          font-size: 12px;
+        }
+      }
+  
+      input[type="text"],
+      input[type="number"] {
+        font-size: 12px;
+      }
+  
+      h2 {
+        font-size: 14px;
+      }
+  
+      button {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+
     }
-  }
+  } 
 }
 
 
@@ -279,14 +345,225 @@
     .Login {
       width: 100%;
       min-height: 100vh;
+    
+      }
+    }
+}
 
+.resultadosPage{
+
+  margin: 20px;
+  padding: 60px 0 0 0; // Añade padding-top para dar espacio al navbar
+  min-height: 100vh; // Asegura que la página ocupe al menos toda la altura de la ventana
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+
+  .navbar {
+    width: 100%;
+    background-color: cornflowerblue;
+    padding: 15px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+  
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: space-around;
+  
+      li {
+        margin: 0 15px;
+  
+        a {
+          color: #ffffff;
+          text-decoration: none;
+          font-weight: 700;
+          font-size: 16px;
+          transition: all ease 0.3s;
+  
+          &:hover {
+            color: #3573cb;
+          }
+        }
+      }
+    }
+  }
+
+  .resultados {
+    background-color: #2d62a8;
+    border-radius: 10px;
+    margin: 20px;
+    width: 100%; 
+    //max-width: 800px; // Limita el ancho máximo
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+    
+
+    //Se maneja el div para centrar el input
+    .input-container {
+      
+      display: flex;
+      flex-direction: column; //Alinear el h1 por encima del input
+      align-items: center;
+      width: 97%;
+      margin: 40px 0;
+      padding: 20px;
+      background-color: #f5f5f5; // Un color de fondo ligero para la "caja"
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1); // Sombra suave para efecto de elevación
+
+      
+    }
+    
+    h1{
+      margin-bottom: 20px; // Espacio entre el h1 y el input
+    }
+
+    h2{
+      padding: 10px;
+      color: #fff;
+    }
+
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    //Se maneja el fondo donde estan los div
+    .mensajeResultados{
+      background-color: rgba(107, 100, 100, 0.2);
+      padding: 20px;
+      margin-top: 50px;
+      border-radius: 20px;
+      text-align: center;
+      font-size: 20px;
+      border: 1px  black;
+      background: transparent;
+      max-width: 100%;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif ;
+      
+    }
+
+    .rdt_Table {
+      background-color: white;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .rdt_TableHead {
+      background-color: #f0f0f0;
+    }
+
+    .rdt_TableHeadRow {
+      font-weight: bold;
+    }
+
+    .rdt_TableBody {
+      .rdt_TableRow {
+        &:hover {
+          background-color: #f5f5f5;
+        }
+      }
+    }
+
+    .rdt_TableCol, .rdt_TableCell {
+      padding: 15px 10px;
+      font-size: 14px;
+      white-space: normal;
+      word-wrap: break-word;
+    }
+
+    // Para manejar el desbordamiento de texto
+    .rdt_TableCell {
+      max-width: 200px; // Ajusta este valor según tus necesidades
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    // Estilos para la paginación
+    .rdt_Pagination {
+      font-size: 14px;
+      color: #333;
+    }
+  
+
+    .resultados input{
+      width: 80%;
+      max-width: 400px; // Para evitar que sea demasiado ancho en pantallas grandes
+      background: rgb(221, 212, 212);
+      border: 2px solid rgba(255, 255, 255, .2);
+      border-radius: 40px;
+      font-size: 16px;
+      color: black;
+      text-align: center; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      margin: 40px 0;
+
+    }
+
+    .resultados input::placeholder{
+      color: #000000;
+      padding: 10px;
+    }
+
+    
+
+    .input-container button{
+      width: 200px;
+      height: 35px;
+      background: #353232;
+      border: none;
+      border-radius: 40px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+      cursor: pointer;
+      font-size: 16px;
+      color: #ffffff;
+      font-weight: 700;
+      transition: all ease 0.5s;
+      margin-top: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background: #c9c6c6;
+        color: rgb(0, 0, 0);
+  }
+    }
+  
+    .error-message {
+      color: red;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .no-results {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .resultado-item {
+      margin-bottom: 20px;
+      padding: 10px;
+      border-radius: 5px;
     }
   }
 
 
 
 
-  
 
 
 
@@ -306,6 +583,9 @@
 
 
 
-}
+
+
+
+
 
 
