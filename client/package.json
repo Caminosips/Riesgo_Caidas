@@ -20,8 +20,12 @@
     "react-dom": "^18.2.0",
     "react-icons": "^5.2.1",
     "react-router-dom": "^6.23.0",
+<<<<<<< HEAD
     "react-tooltip": "^5.27.1",
     "sweetalert2": "^11.12.2"
+=======
+    "sweetalert2": "^11.6.13"
+>>>>>>> 17d36b4d5ffce86dddd63a67304097e5acc25906
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
