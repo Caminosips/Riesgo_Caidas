@@ -15,17 +15,20 @@ const ResultadosPage = () => {
     { 
       name: 'Nombre', 
       selector: row => row.nombre, 
-      cell: row => <span data-tooltip-id="my-tooltip" data-tooltip-content={row.nombre}>{row.nombre}</span>
+      width: '140px',
+      wrap: true,
     },
     { 
       name: 'Numero ID', 
       selector: row => row.num_id, 
-      cell: row => <span data-tooltip-id="my-tooltip" data-tooltip-content={row.num_id}>{row.num_id}</span>
+      width: '140px',
+      wrap: true,
+  
     },
     { 
       name: 'Sexo', 
       selector: row => row.sexo, 
-      cell: row => <span data-tooltip-id="my-tooltip" data-tooltip-content={row.sexo}>{row.sexo}</span>
+    
     },
     { 
       name: 'Caidas', 
@@ -49,11 +52,15 @@ const ResultadosPage = () => {
     { 
       name: 'Estado mental', 
       selector: row => row.estado, 
+      width: '230px',
+      wrap: true,
       cell: row => <span data-tooltip-id="my-tooltip" data-tooltip-content={row.estado}>{row.estado}</span>
     },
     { 
       name: 'Deambulacion', 
       selector: row => row.deambulacion, 
+      width: '220px',
+      wrap: true,
       cell: row => <span data-tooltip-id="my-tooltip" data-tooltip-content={row.deambulacion}>{row.deambulacion}</span>
     },
     { 
@@ -64,6 +71,8 @@ const ResultadosPage = () => {
     { 
       name: 'Puntaje Total', 
       selector: row => row.puntajeTotal, 
+      width: '120px',
+      wrap: true,
       cell: row => <span data-tooltip-id="my-tooltip" data-tooltip-content={row.puntajeTotal}>{row.puntajeTotal}</span>
     },
     { 
@@ -74,6 +83,8 @@ const ResultadosPage = () => {
     { 
       name: 'Accion', 
       selector: row => row.accion, 
+      width: '140px',
+      wrap: true,
       cell: row => <span data-tooltip-id="my-tooltip" data-tooltip-content={row.accion}>{row.accion}</span>
     },
 
@@ -128,10 +139,10 @@ const ResultadosPage = () => {
             <button type="submit">Buscar</button>
           </form>
         </div>
-        {error && <p className="error-message">{error}</p>}
+        
         {resultados.length > 0 && (
           <div className="mensajeResultados">
-            <h2>Resultados del paciente:</h2>
+            <h2>Resultados del paciente</h2>
             <DataTable
               columns={columns}
               data={resultados}

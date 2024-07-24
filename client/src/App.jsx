@@ -5,24 +5,22 @@ import ResultadosPage from './Components/ResultadosPage/ResultadosPage'
 import { useState } from 'react'
 
 
-
-
-
-
 // importar el dominio del enrutador React
 import {
   createBrowserRouter,
   RouterProvider  
 } from 'react-router-dom'
 
+
+function App() {
+  const [user, setUser] = useState([])
+
 // vamos a crear un enrutador
 const router = createBrowserRouter([
 
-
-
   {
     path: '/',
-    element: <div><Login/></div>
+    element: <div><Login setUser={setUser} /></div>
     
   },
   {
@@ -35,15 +33,12 @@ const router = createBrowserRouter([
   }
 
 ]) 
-function App() {
-  const [user,setUser] = useState([])
+
   return (
 
     
-    <RouterProvider router={router}>
-        <Login setUser={setUser}/>,
-    </RouterProvider>
-    
+    <RouterProvider router={router}/>
+
   )
 }
   

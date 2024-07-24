@@ -127,3 +127,21 @@ process.on('SIGINT', () => {
     process.exit();
   });
 });
+
+//Creamos una ruta para el login
+
+app.post('/api/login', (req, res) => {
+  const { usuario, contraseña } = req.body;
+  
+  const sql = 'SELECT * FROM users WHERE username = ? AND password = ?';
+  db.query(sql, [usuario, contraseña], (err, results) => {
+    if (err) {
+      console.error('Error al autenticar:', err);
+      res.status(500).json({ error: 'Error en la autenticación' });
+    } else if (results.length > 0) {
+      res.json({ success: true, user: results[0] });
+    } else {
+      res.status(401).json({ success: false, message: 'Credenciales inválidas' });
+    }
+  });
+});

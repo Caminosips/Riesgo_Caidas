@@ -322,7 +322,7 @@ const App = () => {
         </label>
         <input
           value={num_id}
-          type="number"
+          type="text"
           name="id"
           placeholder="Número de identificación"
           onChange={(event) => setNum_id(event.target.value)}
