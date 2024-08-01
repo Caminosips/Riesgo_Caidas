@@ -77,7 +77,7 @@
   }
 
   h1 {
-    margin-left: 20%;
+    margin-left: 10%;
     margin-top: 100px;
     font-weight: 600;
     font-size: 30px;
@@ -184,7 +184,28 @@
   }
 
   button {
-    width: 20%;
+    width: 200px;
+    height: 35px;
+    margin-left: 35%;
+    margin-bottom: 10px;
+    background: cornflowerblue;
+    border: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    cursor: pointer;
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: 700;
+    transition: all ease 0.5s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: #c9c6c6;
+      color: rgb(0, 0, 0);
+}
+   /* width: 20%;
     height: 30px;
     margin-left: 40%;
     margin-bottom: 30px;
@@ -195,13 +216,10 @@
     color: cornflowerblue;
     transition: all ease 0.7s;
     background: white;
-    border-radius: 10px;
+    border-radius: 10px;*/
   }
   
-  button:hover {
-    background: cornflowerblue;
-    color: white;
-  }
+  
 
   @media screen and (max-width: 480px) {
     .formpage {
@@ -360,6 +378,11 @@
   align-items: center;
   background-color: #ffffff;
 
+  @media (max-width: 768px) {
+    margin: 10px;
+    padding-top: 80px; // Aumenta el padding-top para dispositivos móviles
+  }
+
   .navbar {
     width: 100%;
     background-color: cornflowerblue;
@@ -368,6 +391,10 @@
     top: 0;
     left: 0;
     z-index: 1000;
+
+    @media (max-width: 768px) {
+      padding: 10px 0;
+    }
   
     ul {
       list-style-type: none;
@@ -375,6 +402,7 @@
       margin: 0;
       display: flex;
       justify-content: space-around;
+    
   
       li {
         margin: 0 15px;
@@ -387,7 +415,7 @@
           transition: all ease 0.3s;
   
           &:hover {
-            color: #3573cb;
+            color: black;
           }
         }
       }
@@ -395,19 +423,27 @@
   }
 
   .resultados {
-    background-color: #2d62a8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: cornflowerblue;
     border-radius: 10px;
     margin: 20px;
-    width: 100%; 
-    //max-width: 800px; // Limita el ancho máximo
+    width: 95%;
+    max-width: 1200px; // Establece un ancho máximo
+    margin: 20px auto;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+    @media (max-width: 768px) {
+      width: 100%;
+      margin: 10px auto;
+    }
   }
     
 
     //Se maneja el div para centrar el input
     .input-container {
-      
       display: flex;
       flex-direction: column; //Alinear el h1 por encima del input
       align-items: center;
@@ -417,12 +453,24 @@
       background-color: #f5f5f5; // Un color de fondo ligero para la "caja"
       border-radius: 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1); // Sombra suave para efecto de elevación
+      width: 100%;
+      max-width: 600px; // Establece un ancho máximo
+      margin: 20px auto;
+      
+      @media (max-width: 768px) {
+        width: 95%;
+      }
 
       
     }
     
     h1{
       margin-bottom: 20px; // Espacio entre el h1 y el input
+      font-size: 2rem;
+      
+      @media (max-width: 768px) {
+        font-size: 1.5rem;
+      }
     }
 
     h2{
@@ -441,7 +489,7 @@
     //Se maneja el fondo donde estan los div
     .mensajeResultados{
       background-color: rgba(107, 100, 100, 0.2);
-      padding: 20px;
+      
       margin-top: 50px;
       border-radius: 20px;
       text-align: center;
@@ -451,12 +499,22 @@
       max-width: 100%;
       font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif ;
       
+      
+      @media (max-width: 768px) {
+        padding: 10px;
+        margin-top: 30px;
+        font-size: 16px;
+      }
     }
 
     .rdt_Table {
       background-color: white;
       overflow: hidden;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+
+      @media (max-width: 768px) {
+        font-size: 12px; // Reduce el tamaño de la fuente en móviles
+      }
     }
 
     .rdt_TableHead {
@@ -480,13 +538,22 @@
       font-size: 14px;
       white-space: normal;
       word-wrap: break-word;
+
+      @media (max-width: 768px) {
+        padding: 10px 5px;
+        font-size: 12px;
+      }
     }
 
     // Para manejar el desbordamiento de texto
     .rdt_TableCell {
-      max-width: 200px; // Ajusta este valor según tus necesidades
+      max-width: 200px; 
       overflow: hidden;
       text-overflow: ellipsis;
+
+      @media (max-width: 768px) {
+        max-width: 100px; // Reduce el ancho máximo en móviles
+      }
     }
 
     // Estilos para la paginación
@@ -511,6 +578,10 @@
       height: 40px;
       margin: 40px 0;
 
+      @media (max-width: 768px) {
+        width: 90%;
+      }
+
     }
 
     .resultados input::placeholder{
@@ -523,7 +594,7 @@
     .input-container button{
       width: 200px;
       height: 35px;
-      background: #353232;
+      background: cornflowerblue;
       border: none;
       border-radius: 40px;
       box-shadow: 0 0 10px rgba(0, 0, 0, .1);
@@ -536,6 +607,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
+
+      @media (max-width: 768px) {
+        width: 80%;
+        max-width: 200px;
+      }
 
       &:hover {
         background: #c9c6c6;
@@ -558,6 +634,30 @@
       margin-bottom: 20px;
       padding: 10px;
       border-radius: 5px;
+
+      @media (max-width: 768px) {
+        padding: 5px;
+      }
+    }
+
+    .mensajeResultados button {
+      width: 100px;
+      height: 35px;
+      background: cornflowerblue;
+      border: none;
+      border-radius: 40px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+      cursor: pointer;
+      font-size: 16px;
+      color: #ffffff;
+      font-weight: 700;
+      transition: all ease 0.5s;
+      margin-top: 30px;
+      &:hover {
+        background: #c9c6c6;
+        color: rgb(0, 0, 0);
+    }
+      
     }
   }
 

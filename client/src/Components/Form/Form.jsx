@@ -91,7 +91,7 @@ const App = () => {
     if (puntaje >= 3) {
       return {
         mensaje: "Alto riesgo de caídas",
-        accion: "Implementar medidas de prevención de caídas"
+        accion: "Implementar medidas especiales, colocar manilla roja institucional"
       };
     } else if (puntaje >= 1) {
       return {

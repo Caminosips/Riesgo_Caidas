@@ -4,6 +4,8 @@ import Navbar from "../Form/Navbar"
 import Swal from "sweetalert2";
 import DataTable from "react-data-table-component"
 import { Tooltip } from 'react-tooltip'
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 
 const ResultadosPage = () => {
@@ -11,6 +13,40 @@ const ResultadosPage = () => {
   const [resultados, setResultados] = useState([]);
   const [error, setError] = useState(null);
 
+  const exportToExcel = (resultado) => {
+    const nombreArchivo = `resultados_${resultado.nombre.replace(/\s+/g, '_')}.xlsx`;
+  
+    // Crear una nueva hoja de cálculo con solo este resultado
+    const ws = XLSX.utils.json_to_sheet([resultado]);
+  
+    // Ajustar el ancho de las columnas (mantén el mismo ajuste que tenías antes)
+    const wscols = [
+      {wch: 20}, {wch: 15}, {wch: 10}, {wch: 10}, {wch: 30}, {wch: 30},
+      {wch: 25}, {wch: 25}, {wch: 10}, {wch: 15}, {wch: 30}, {wch: 20},
+    ];
+    ws['!cols'] = wscols;
+  
+    // Crear un nuevo libro y agregar la hoja
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Resultado");
+  
+    // Guardar el archivo
+    const wbout = XLSX.write(wb, {bookType:'xlsx', type:'binary'});
+  
+    // Convertir a un Blob
+    function s2ab(s) {
+      const buf = new ArrayBuffer(s.length);
+      const view = new Uint8Array(buf);
+      for (let i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+      return buf;
+    }
+  
+    const blob = new Blob([s2ab(wbout)], {type:"application/octet-stream"});
+  
+    // Descargar el archivo
+    saveAs(blob, nombreArchivo);
+  };
+  
   const columns = [
     { 
       name: 'Nombre', 
@@ -83,9 +119,24 @@ const ResultadosPage = () => {
     { 
       name: 'Accion', 
       selector: row => row.accion, 
-      width: '140px',
+      width: '200px',
       wrap: true,
       cell: row => <span data-tooltip-id="my-tooltip" data-tooltip-content={row.accion}>{row.accion}</span>
+    },
+    { 
+      name: 'Descargar', 
+      width : '200px',
+      cell: row => (
+        <button 
+          onClick={() => exportToExcel(row)} 
+          className="btn btn-sm btn-primary"
+        >
+          Descargar
+        </button>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
     },
 
   ];
@@ -151,7 +202,10 @@ const ResultadosPage = () => {
               fixedHeaderScrollHeight="400px"
               dense
             />
-          <Tooltip id="my-tooltip" />
+            {/*<button onClick={exportToExcel} className="btn btn-primary">
+              Descargar Resultados
+            </button> */}
+            <Tooltip id="my-tooltip" />
           </div>
         )}
       </div>

@@ -15,17 +15,16 @@
     "@nextui-org/table": "^2.0.39",
     "axios": "^1.7.2",
     "express": "^4.19.2",
+    "file-saver": "^2.0.5",
     "react": "^18.2.0",
+    "react-csv": "^2.2.2",
     "react-data-table-component": "^7.6.2",
     "react-dom": "^18.2.0",
     "react-icons": "^5.2.1",
     "react-router-dom": "^6.23.0",
-<<<<<<< HEAD
     "react-tooltip": "^5.27.1",
-    "sweetalert2": "^11.12.2"
-=======
-    "sweetalert2": "^11.6.13"
->>>>>>> 17d36b4d5ffce86dddd63a67304097e5acc25906
+    "sweetalert2": "^11.12.2",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
